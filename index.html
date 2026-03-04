@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TeamBeacon — Workforce 9-Box</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <script src="lib.js"></script>
+  <style>
+    .box-green  { background-color: #bbf7d0; border-color: #16a34a; }
+    .box-yellow { background-color: #fef9c3; border-color: #ca8a04; }
+    .box-red    { background-color: #fee2e2; border-color: #dc2626; }
+    .box-neutral{ background-color: #f9fafb; border-color: #d1d5db; }
+    .employee-chip {
+      display: inline-block;
+      font-size: 0.7rem;
+      padding: 1px 6px;
+      border-radius: 9999px;
+      background: rgba(0,0,0,0.08);
+      margin: 2px 1px;
+      white-space: nowrap;
+      cursor: grab;
+      user-select: none;
+    }
+    .employee-chip:active { cursor: grabbing; }
+    .grid-cell { transition: box-shadow 0.15s; }
+    .cell-highlight { box-shadow: 0 0 0 3px #818cf8; }
+    .cell-drag-over { box-shadow: 0 0 0 3px #6366f1; opacity: 0.8; }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen font-sans text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-gray-200 px-6 py-4 flex items-center gap-3">
+    <div class="w-7 h-7 rounded bg-indigo-600 flex items-center justify-center">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+      </svg>
+    </div>
+    <h1 class="text-xl font-semibold tracking-tight">TeamBeacon</h1>
+    <div id="header-actions" class="hidden ml-auto flex items-center gap-2">
+      <button onclick="exportCSV()"
+        class="text-sm font-medium px-3 py-1.5 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 transition">
+        Export CSV
+      </button>
+      <button onclick="resetSession()"
+        class="text-sm font-medium px-3 py-1.5 rounded-lg border border-red-200 text-red-600 hover:bg-red-50 transition">
+        Reset &amp; Start Fresh
+      </button>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 py-10 space-y-10">
+
+    <!-- Input Section -->
+    <section class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-5">
+      <h2 class="text-lg font-semibold">Load Employee Data</h2>
+      <p class="text-sm text-gray-500">
+        Provide a spreadsheet with columns: <code class="bg-gray-100 px-1 rounded">Name</code>,
+        <code class="bg-gray-100 px-1 rounded">Performance</code>,
+        <code class="bg-gray-100 px-1 rounded">Potential</code>,
+        <code class="bg-gray-100 px-1 rounded">Risk of Loss</code>,
+        <code class="bg-gray-100 px-1 rounded">Impact of Loss</code>.
+        Values must be 1, 2, or 3.
+      </p>
+
+      <!-- Tabs -->
+      <div class="flex gap-2 border-b border-gray-200">
+        <button id="tab-sheets" onclick="switchTab('sheets')"
+          class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-indigo-600 text-indigo-600">
+          Google Sheets URL
+        </button>
+        <button id="tab-csv" onclick="switchTab('csv')"
+          class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700">
+          Upload CSV
+        </button>
+        <button id="tab-manual" onclick="switchTab('manual')"
+          class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700">
+          Manually Edit
+        </button>
+      </div>
+
+      <!-- Google Sheets Panel -->
+      <div id="panel-sheets" class="space-y-3">
+        <p class="text-sm text-gray-500">
+          Start from a Google Sheet with your employee list. The only required column is
+          <code class="bg-gray-100 px-1 rounded">Name</code>; you can also include any or all of
+          <code class="bg-gray-100 px-1 rounded">Performance</code>,
+          <code class="bg-gray-100 px-1 rounded">Potential</code>,
+          <code class="bg-gray-100 px-1 rounded">Risk of Loss</code>, and
+          <code class="bg-gray-100 px-1 rounded">Impact of Loss</code> (values 1–3).
+          Missing ratings default to 2.
+        </p>
+        <p class="text-sm text-gray-500">
+          To load your sheet: <strong>File → Share → Publish to web</strong> → choose the sheet tab →
+          select <strong>Comma-separated values (.csv)</strong> → click Publish. Paste the link below.
+        </p>
+        <p class="text-sm text-gray-500">
+          When you're done, use <strong>Export CSV</strong> to save your work and bring it back into Google Sheets.
+        </p>
+        <div class="flex gap-3">
+          <input id="sheets-url" type="text" placeholder="https://docs.google.com/spreadsheets/d/e/.../pub?output=csv"
+            class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+          <button onclick="loadFromSheets()"
+            class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition">
+            Load
+          </button>
+        </div>
+      </div>
+
+      <!-- CSV Upload Panel -->
+      <div id="panel-csv" class="hidden space-y-3">
+        <input id="csv-file" type="file" accept=".csv"
+          class="text-sm text-gray-600 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" />
+        <button onclick="loadFromFile()"
+          class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition">
+          Load
+        </button>
+      </div>
+
+      <!-- Edit Data / Enter Manually Panel (shared) -->
+      <div id="panel-edit" class="hidden space-y-3">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-xs text-gray-500 border-b border-gray-200">
+                <th class="px-3 py-2 font-medium">Name</th>
+                <th class="px-3 py-2 font-medium text-center">Performance</th>
+                <th class="px-3 py-2 font-medium text-center">Potential</th>
+                <th class="px-3 py-2 font-medium text-center">Risk of Loss</th>
+                <th class="px-3 py-2 font-medium text-center">Impact of Loss</th>
+                <th class="px-3 py-2"></th>
+              </tr>
+            </thead>
+            <tbody id="edit-rows"></tbody>
+          </table>
+        </div>
+        <button id="add-employee-btn" onclick="addEditRow()" onkeydown="handleAddBtnKey(event)"
+          class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">
+          + Add employee
+        </button>
+      </div>
+
+      <!-- Error -->
+      <div id="error-msg" class="hidden text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2"></div>
+    </section>
+
+    <!-- Results Section -->
+    <section id="results" class="hidden space-y-10">
+
+      <!-- Employee count -->
+      <div id="employee-summary" class="text-sm text-gray-500"></div>
+
+      <!-- Two 9-box grids -->
+      <div class="flex flex-col lg:flex-row">
+        <div class="flex-1 lg:pr-4">
+          <h2 class="text-base font-semibold mb-4 text-gray-700">Performance vs. Potential</h2>
+          <div id="grid-perf-pot"></div>
+        </div>
+        <div class="hidden lg:block w-px self-stretch bg-gray-200"></div>
+        <div class="flex-1 lg:pl-4 mt-8 lg:mt-0">
+          <h2 class="text-base font-semibold mb-4 text-gray-700">Risk of Loss vs. Impact of Loss</h2>
+          <div id="grid-risk-impact"></div>
+        </div>
+      </div>
+
+      <!-- Report -->
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+        <h2 class="text-lg font-semibold mb-4">Outlier Report</h2>
+        <div id="report-content" class="space-y-4"></div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script>
+    // Color specs, labels, clampRating, processEmployees, and groupOutliers
+    // are loaded from lib.js.
+
+    // ─── State ─────────────────────────────────────────────────────────────────
+    let employees = [];
+
+    // ─── Session persistence (sessionStorage — isolated per tab/window) ──────────
+    const STORAGE_KEY = 'teambeacon_employees';
+
+    function saveToStorage() {
+      try {
+        sessionStorage.setItem(STORAGE_KEY, JSON.stringify(employees));
+      } catch (e) {
+        console.warn('Could not save to sessionStorage:', e);
+      }
+    }
+
+    function loadFromStorage() {
+      try {
+        const saved = sessionStorage.getItem(STORAGE_KEY);
+        if (!saved) return;
+        const parsed = JSON.parse(saved);
+        if (!Array.isArray(parsed) || parsed.length === 0) return;
+        employees = parsed;
+        renderAll();
+      } catch (e) {
+        console.warn('Could not restore session:', e);
+      }
+    }
+
+    // ─── Export CSV ────────────────────────────────────────────────────────────
+    function exportCSV() {
+      const header = 'Name,Performance,Potential,Risk of Loss,Impact of Loss';
+      const rows = employees.map(e => {
+        const name = '"' + e.name.replace(/"/g, '""') + '"';
+        return `${name},${e.perf},${e.pot},${e.risk},${e.imp}`;
+      });
+      const csv = [header, ...rows].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'teambeacon-export.csv';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // ─── Reset session ─────────────────────────────────────────────────────────
+    function resetSession() {
+      if (!confirm('Reset and start fresh? All current data will be cleared.')) return;
+      employees = [];
+      sessionStorage.removeItem(STORAGE_KEY);
+      document.getElementById('results').classList.add('hidden');
+      document.getElementById('header-actions').classList.add('hidden');
+      hideError();
+      switchTab('sheets');
+    }
+
+    // ─── Tab switching ─────────────────────────────────────────────────────────
+    // 'manual' maps to panel-edit.
+    function switchTab(tab) {
+      const activePanel = tab === 'manual' ? 'edit' : tab;
+      ['sheets', 'csv', 'edit'].forEach(panelId => {
+        document.getElementById('panel-' + panelId).classList.toggle('hidden', panelId !== activePanel);
+      });
+      ['sheets', 'csv', 'manual'].forEach(t => {
+        const btn = document.getElementById('tab-' + t);
+        if (!btn) return;
+        btn.classList.toggle('border-indigo-600', t === tab);
+        btn.classList.toggle('text-indigo-600', t === tab);
+        btn.classList.toggle('border-transparent', t !== tab);
+        btn.classList.toggle('text-gray-500', t !== tab);
+      });
+    }
+
+    // ─── Google Sheets ─────────────────────────────────────────────────────────
+    function normalizeGoogleSheetsUrl(raw) {
+      // pubhtml → pub?output=csv
+      if (raw.includes('/pubhtml')) return raw.replace('/pubhtml', '/pub?output=csv');
+      // pub without output param → add it
+      if (raw.includes('/pub') && !raw.includes('output=')) return raw + (raw.includes('?') ? '&' : '?') + 'output=csv';
+      return raw;
+    }
+
+    function loadFromSheets() {
+      const raw = document.getElementById('sheets-url').value.trim();
+      if (!raw) { showError('Please enter a Google Sheets URL.'); return; }
+      const url = normalizeGoogleSheetsUrl(raw);
+      hideError();
+      Papa.parse(url, {
+        download: true,
+        header: true,
+        skipEmptyLines: true,
+        complete: r => handleData(r.data),
+        error: () => showError(
+          'Could not fetch the sheet. ' +
+          'If you are opening this file directly from your computer (file://), Google Sheets loading is blocked by the browser — use Upload CSV instead. ' +
+          'Otherwise, make sure the sheet is published as CSV (File → Share → Publish to web → CSV).'
+        ),
+      });
+    }
+
+    // ─── CSV file ──────────────────────────────────────────────────────────────
+    function loadFromFile() {
+      const file = document.getElementById('csv-file').files[0];
+      if (!file) { showError('Please select a CSV file.'); return; }
+      hideError();
+      Papa.parse(file, {
+        header: true,
+        skipEmptyLines: true,
+        complete: r => handleData(r.data),
+        error: () => showError('Could not parse the CSV file.'),
+      });
+    }
+
+    // ─── Core processing ───────────────────────────────────────────────────────
+    function handleData(raw) {
+      const { employees: parsed, errors } = processEmployees(raw);
+
+      if (parsed.length === 0) {
+        showError('No valid employee rows found. ' + (errors[0] || 'Check column names and values (1–3).'));
+        return;
+      }
+      hideError();
+      if (errors.length) console.warn('Skipped rows:', errors);
+
+      employees = parsed;
+      saveToStorage();
+      renderAll();
+    }
+
+    // ─── Render ────────────────────────────────────────────────────────────────
+    function renderAll() {
+      document.getElementById('results').classList.remove('hidden');
+      document.getElementById('header-actions').classList.toggle('hidden', employees.length === 0);
+      document.getElementById('employee-summary').textContent =
+        `Showing results for ${employees.length} employee${employees.length !== 1 ? 's' : ''}.`;
+      renderEditPanel();
+
+      renderGrid(
+        'grid-perf-pot',
+        employees,
+        e => e.perf,
+        e => e.pot,
+        PERF_POT_COLORS,
+        'Performance',
+        'Potential'
+      );
+
+      renderGrid(
+        'grid-risk-impact',
+        employees,
+        e => e.risk,
+        e => e.imp,
+        RISK_IMPACT_COLORS,
+        'Risk of Loss',
+        'Impact of Loss'
+      );
+
+      renderReport();
+    }
+
+    function renderGrid(containerId, emps, xFn, yFn, colorSpec, xLabel, yLabel) {
+      const container = document.getElementById(containerId);
+
+      // Build cell contents
+      const cells = {};
+      for (let x = 1; x <= 3; x++)
+        for (let y = 1; y <= 3; y++)
+          cells[`${x},${y}`] = [];
+
+      emps.forEach(e => cells[`${xFn(e)},${yFn(e)}`].push(e.name));
+
+      // Grid: Y goes top (3) to bottom (1), X goes left (1) to right (3)
+      let html = `
+        <div class="flex items-stretch gap-2">
+          <!-- Y-axis label -->
+          <div class="flex items-center justify-center" style="writing-mode:vertical-rl;transform:rotate(180deg)">
+            <span class="text-xs text-gray-400 font-medium whitespace-nowrap">${yLabel} →</span>
+          </div>
+          <!-- Grid + X-axis label -->
+          <div class="flex-1">
+          <div class="grid grid-cols-3 gap-1">
+      `;
+
+      for (let y = 3; y >= 1; y--) {
+        for (let x = 1; x <= 3; x++) {
+          const key = `${x},${y}`;
+          const color = colorSpec[key] || 'neutral';
+          const names = cells[key];
+          const cellClass = `box-${color}`;
+          html += `
+            <div class="rounded-lg border-2 ${cellClass} p-2 min-h-[90px] flex flex-col grid-cell" data-coord="${key}">
+              <div class="text-xs text-gray-400 font-mono mb-1">${x},${y}</div>
+              <div class="flex-1 flex flex-wrap content-start">
+                ${names.map(n => `<span class="employee-chip" draggable="true" data-emp-name="${n.replace(/"/g, '&quot;')}">${n}</span>`).join('')}
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      html += `
+          </div>
+          <!-- X-axis label -->
+          <div class="mt-2 text-center text-xs text-gray-400 font-medium">${xLabel} →</div>
+          </div><!-- end flex-1 -->
+        </div><!-- end flex wrapper -->
+      `;
+
+      container.innerHTML = html;
+    }
+
+    function renderReport() {
+      const report = document.getElementById('report-content');
+      const sections = [];
+
+      // Performance vs. Potential outliers
+      const ppOutliers = groupOutliers(
+        employees,
+        e => e.perf,
+        e => e.pot,
+        PERF_POT_COLORS,
+        PERF_POT_LABELS,
+        'Performance',
+        'Potential'
+      ).map(s => ({ ...s, gridId: 'grid-perf-pot' }));
+
+      // Risk vs. Impact outliers
+      const riOutliers = groupOutliers(
+        employees,
+        e => e.risk,
+        e => e.imp,
+        RISK_IMPACT_COLORS,
+        RISK_IMPACT_LABELS,
+        'Risk of Loss',
+        'Impact of Loss'
+      ).map(s => ({ ...s, gridId: 'grid-risk-impact' }));
+
+      const ppRed   = ppOutliers.filter(s => s.color === 'red');
+      const ppGreen = ppOutliers.filter(s => s.color === 'green');
+      const riRed   = riOutliers.filter(s => s.color === 'red');
+      const riGreen = riOutliers.filter(s => s.color === 'green');
+
+      if (ppRed.length + ppGreen.length + riRed.length + riGreen.length === 0) {
+        report.innerHTML = `<p class="text-gray-500 text-sm">No outliers detected — most employees are clustered in the middle.</p>`;
+        return;
+      }
+
+      function renderGroup(title, desc, items, cardClasses) {
+        if (items.length === 0) return '';
+        return `
+          <div class="space-y-2">
+            <h3 class="text-sm font-semibold text-gray-700">${title}</h3>
+            ${desc ? `<p class="text-xs text-gray-500 mt-1 mb-2">${desc}</p>` : ''}
+            ${items.map(s => `
+              <div class="border rounded-lg p-4 ${cardClasses}" style="cursor:pointer"
+                   data-grid-id="${s.gridId}" data-coord="${s.coord}">
+                <div class="flex items-center gap-2 mb-1 pointer-events-none">
+                  <span class="font-semibold text-sm">${s.label}</span>
+                  <span class="text-xs opacity-70">(${s.coord})</span>
+                </div>
+                <p class="text-sm pointer-events-none">${s.names.join(', ')}</p>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      report.innerHTML = [
+        renderGroup(
+          '🚨 Needs attention — Performance vs. Potential',
+          'Possible misalignment: These individuals are not performing well and are at or near their ceiling. Consider whether they are a good fit for this organization or team.',
+          ppRed, 'bg-red-50 text-red-800 border-red-200'
+        ),
+        renderGroup(
+          '🚨 Needs attention — Risk of Loss vs. Impact of Loss',
+          'Possible operational risk: These individuals may be at risk of leaving the organization and would have an outsized impact if they did so. Consider succession planning or adding operational redundancy to mitigate this risk.',
+          riRed, 'bg-red-50 text-red-800 border-red-200'
+        ),
+        renderGroup(
+          '🔑 Opportunities — Performance vs. Potential',
+          'Possible promotion or responsibility augmentation opportunity: These individuals are performing exceptionally and have a high ceiling. Consider looking for opportunities to promote them or expand their role.',
+          ppGreen, 'bg-green-50 text-green-800 border-green-200'
+        ),
+        renderGroup(
+          '🔑 Opportunities — Risk of Loss vs. Impact of Loss',
+          '',
+          riGreen, 'bg-green-50 text-green-800 border-green-200'
+        ),
+      ].filter(Boolean).join('');
+    }
+
+    // groupOutliers is loaded from lib.js.
+
+    // ─── Edit panel ────────────────────────────────────────────────────────────
+    const DIM_FIELDS = [
+      ['perf', 'Performance'],
+      ['pot',  'Potential'],
+      ['risk', 'Risk of Loss'],
+      ['imp',  'Impact of Loss'],
+    ];
+
+    function renderEditPanel() {
+      const tbody = document.getElementById('edit-rows');
+      tbody.innerHTML = employees.map((e, i) => `
+        <tr class="border-b border-gray-100 hover:bg-gray-50">
+          <td class="px-3 py-1.5">
+            <input type="text" value="${e.name.replace(/"/g, '&quot;')}"
+              data-idx="${i}" data-field="name"
+              class="border border-gray-300 rounded px-2 py-1 text-sm w-40 focus:outline-none focus:ring-1 focus:ring-indigo-400"
+              oninput="updateName(${i}, this.value)"
+              onfocus="setTimeout(() => { if (this.value === 'New Employee') this.select(); else this.setSelectionRange(this.value.length, this.value.length); }, 0)" />
+          </td>
+          ${DIM_FIELDS.map(([field]) => `
+            <td class="px-3 py-1.5">
+              <div class="flex items-center justify-center gap-1">
+                <button type="button" tabindex="-1"
+                  onclick="adjustVal(${i}, '${field}', -1)"
+                  class="w-6 h-6 rounded border border-gray-200 text-gray-400 hover:bg-gray-100 hover:text-gray-700 flex items-center justify-center text-sm select-none">−</button>
+                <input type="text" inputmode="numeric" value="${e[field]}"
+                  data-idx="${i}" data-field="${field}"
+                  class="w-8 text-center border border-gray-300 rounded px-1 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-400"
+                  onfocus="this.select()"
+                  onkeydown="handleDimKey(event, ${i}, '${field}')" />
+                <button type="button" tabindex="-1"
+                  onclick="adjustVal(${i}, '${field}', 1)"
+                  class="w-6 h-6 rounded border border-gray-200 text-gray-400 hover:bg-gray-100 hover:text-gray-700 flex items-center justify-center text-sm select-none">+</button>
+              </div>
+            </td>
+          `).join('')}
+          <td class="px-3 py-1.5 text-center">
+            <button type="button" tabindex="-1" onclick="removeEditRow(${i})"
+              class="text-gray-300 hover:text-red-400 text-xl leading-none">&times;</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function updateName(idx, value) {
+      employees[idx].name = value;
+      renderGridsAndReport();
+    }
+
+    function adjustVal(idx, field, delta) {
+      const newVal = clampRating((employees[idx][field] || 2) + delta);
+      employees[idx][field] = newVal;
+      const input = document.querySelector(`input[data-idx="${idx}"][data-field="${field}"]`);
+      if (input) { input.value = newVal; input.select(); }
+      renderGridsAndReport();
+    }
+
+    function handleDimKey(e, idx, field) {
+      if (e.key === 'Tab' && !e.shiftKey && field === 'imp' && idx === employees.length - 1) {
+        e.preventDefault();
+        document.getElementById('add-employee-btn').focus();
+        return;
+      }
+      if (e.key === 'Tab') return;
+      if (e.key >= '0' && e.key <= '9') {
+        e.preventDefault();
+        const clamped = clampRating(parseInt(e.key) || 1);
+        employees[idx][field] = clamped;
+        e.target.value = clamped;
+        e.target.select();
+        renderGridsAndReport();
+        return;
+      }
+      if (!['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Shift'].includes(e.key)) {
+        e.preventDefault();
+      }
+    }
+
+    function handleAddBtnKey(e) {
+      if (e.key === 'Tab' && !e.shiftKey) {
+        e.preventDefault();
+        const firstNameInput = document.querySelector('#edit-rows tr:first-child input[data-field="name"]');
+        if (firstNameInput) firstNameInput.focus();
+      }
+    }
+
+    function renderGridsAndReport() {
+      document.getElementById('employee-summary').textContent =
+        `Showing results for ${employees.length} employee${employees.length !== 1 ? 's' : ''}.`;
+      renderGrid('grid-perf-pot', employees, e => e.perf, e => e.pot, PERF_POT_COLORS, 'Performance', 'Potential');
+      renderGrid('grid-risk-impact', employees, e => e.risk, e => e.imp, RISK_IMPACT_COLORS, 'Risk of Loss', 'Impact of Loss');
+      renderReport();
+      saveToStorage();
+    }
+
+    function addEditRow() {
+      employees.push({ name: 'New Employee', perf: 2, pot: 2, risk: 2, imp: 2 });
+      saveToStorage();
+      renderAll();
+      const rows = document.querySelectorAll('#edit-rows tr');
+      const lastRow = rows[rows.length - 1];
+      if (lastRow) {
+        const nameInput = lastRow.querySelector('input[data-field="name"]');
+        if (nameInput) { nameInput.focus(); nameInput.select(); }
+      }
+    }
+
+    function removeEditRow(idx) {
+      employees.splice(idx, 1);
+      renderEditPanel();
+      renderGridsAndReport();
+    }
+
+    // ─── Helpers ───────────────────────────────────────────────────────────────
+    function showError(msg) {
+      const el = document.getElementById('error-msg');
+      el.textContent = msg;
+      el.classList.remove('hidden');
+    }
+
+    function hideError() {
+      document.getElementById('error-msg').classList.add('hidden');
+    }
+
+    // ─── Drag-and-drop: chips between grid cells ──────────────────────────────
+    const GRID_FIELDS = {
+      'grid-perf-pot':    { xField: 'perf', yField: 'pot' },
+      'grid-risk-impact': { xField: 'risk', yField: 'imp' },
+    };
+
+    function setupDragAndDrop() {
+      const results = document.getElementById('results');
+
+      results.addEventListener('dragstart', e => {
+        const chip = e.target.closest('.employee-chip');
+        if (!chip) return;
+        const gridEl = chip.closest('[id^="grid-"]');
+        if (!gridEl) return;
+        e.dataTransfer.setData('text/plain', JSON.stringify({
+          name: chip.dataset.empName,
+          fromGrid: gridEl.id,
+        }));
+        e.dataTransfer.effectAllowed = 'move';
+        setTimeout(() => chip.classList.add('opacity-40'), 0);
+      });
+
+      results.addEventListener('dragend', e => {
+        const chip = e.target.closest('.employee-chip');
+        if (chip) chip.classList.remove('opacity-40');
+        results.querySelectorAll('.cell-drag-over').forEach(el => el.classList.remove('cell-drag-over'));
+      });
+
+      results.addEventListener('dragover', e => {
+        const cell = e.target.closest('.grid-cell');
+        if (!cell) return;
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        results.querySelectorAll('.cell-drag-over').forEach(el => {
+          if (el !== cell) el.classList.remove('cell-drag-over');
+        });
+        cell.classList.add('cell-drag-over');
+      });
+
+      results.addEventListener('drop', e => {
+        e.preventDefault();
+        const cell = e.target.closest('.grid-cell');
+        if (!cell) return;
+        cell.classList.remove('cell-drag-over');
+
+        let data;
+        try { data = JSON.parse(e.dataTransfer.getData('text/plain')); } catch (ex) { return; }
+
+        const gridEl = cell.closest('[id^="grid-"]');
+        if (!gridEl || data.fromGrid !== gridEl.id) return;
+
+        const fields = GRID_FIELDS[gridEl.id];
+        if (!fields) return;
+
+        const [newX, newY] = cell.dataset.coord.split(',').map(Number);
+        const emp = employees.find(emp => emp.name === data.name);
+        if (!emp) return;
+
+        emp[fields.xField] = newX;
+        emp[fields.yField] = newY;
+        saveToStorage();
+        renderAll();
+      });
+    }
+
+    // ─── Report hover/click → highlight grid cell ─────────────────────────────
+    function setupReportHover() {
+      const report = document.getElementById('report-content');
+
+      report.addEventListener('mouseover', e => {
+        const card = e.target.closest('[data-grid-id]');
+        const fromCard = e.relatedTarget ? e.relatedTarget.closest('[data-grid-id]') : null;
+        if (card === fromCard) return;
+        document.querySelectorAll('.cell-highlight').forEach(el => el.classList.remove('cell-highlight'));
+        if (!card) return;
+        const cell = document.querySelector(`#${card.dataset.gridId} [data-coord="${card.dataset.coord}"]`);
+        if (cell) cell.classList.add('cell-highlight');
+      });
+
+      report.addEventListener('mouseout', e => {
+        const card = e.target.closest('[data-grid-id]');
+        const toCard = e.relatedTarget ? e.relatedTarget.closest('[data-grid-id]') : null;
+        if (!card || card === toCard) return;
+        const cell = document.querySelector(`#${card.dataset.gridId} [data-coord="${card.dataset.coord}"]`);
+        if (cell) cell.classList.remove('cell-highlight');
+      });
+
+      report.addEventListener('click', e => {
+        const card = e.target.closest('[data-grid-id]');
+        if (!card) return;
+        const cell = document.querySelector(`#${card.dataset.gridId} [data-coord="${card.dataset.coord}"]`);
+        if (cell) cell.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    }
+
+    // ─── Warn before closing/navigating away with unsaved data ────────────────
+    window.addEventListener('beforeunload', e => {
+      if (employees.length > 0) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    });
+
+    // ─── Restore session on load ────────────────────────────────────────────────
+    loadFromStorage();
+    setupDragAndDrop();
+    setupReportHover();
+  </script>
+</body>
+</html>
