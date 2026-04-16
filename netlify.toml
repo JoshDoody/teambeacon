@@ -1,0 +1,11 @@
+[build]
+  publish = "."
+
+[functions]
+  directory = "netlify/functions"
+
+# Ensure /app redirects to /app/ (trailing slash) so index.html is served
+[[redirects]]
+  from = "/app"
+  to = "/app/"
+  status = 301
