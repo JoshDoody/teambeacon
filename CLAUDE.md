@@ -4,6 +4,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
+**`@playwright/test` is pinned to an exact `1.62.1` — do not restore the
+caret.** Each Playwright version wants its own browser build, and the browser
+cache is shared across every project on this machine. A caret lets `npm install`
+drift a repo onto a version whose build nobody installed, and then every e2e
+test fails in ~1ms with "Executable doesn't exist" — that signature means
+*install the browser*, not *the tests are broken*. daily, teambeacon and
+leadership are pinned to the same version on purpose, so one
+`npx playwright install chromium` serves all three; bumping one means bumping
+all three.
+
+
 ```bash
 npm test              # run all tests (Jest unit + Playwright e2e)
 npm run test:unit     # Jest only
