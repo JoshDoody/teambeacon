@@ -7,3 +7,6 @@ test-results/
 
 # Netlify CLI edge-function artifact — regenerated, not ours
 deno.lock
+
+# Seeded design canvas — 2.5MB, regenerated from design/*.dc.html on every change
+design/teambeacon-redesign.html
