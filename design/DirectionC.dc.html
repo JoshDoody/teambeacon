@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+  <style>
+    body { margin: 0; background: #FFFFFF; font-family: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: #B25E12; } a:hover { color: #8A480C; }
+  </style>
+</helmet>
+
+<div style="box-sizing: border-box; width: 480px; background: #FFFFFF; color: #121417; display: flex; flex-direction: column; gap: 26px; padding: 30px 28px 34px;">
+
+  <div style="display: flex; flex-direction: column; gap: 6px;">
+    <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #8A9099;">Direction C</div>
+    <div style="font-family: 'Space Grotesk', ui-sans-serif, sans-serif; font-size: 32px; font-weight: 700; line-height: 1.05; letter-spacing: -0.03em;">Signal</div>
+    <div style="font-size: 13.5px; line-height: 1.55; color: #5A616B; text-wrap: pretty; max-width: 40ch;">The grids are the identity. Big colour blocks, a single warm accent, geometric headings against plain body text.</div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 8px;">
+    <div style="font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #A2A8B0;">Header</div>
+    <div style="background: #121417; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E8912B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10"></path><path d="M10 20V4"></path><path d="M16 20v-7"></path><path d="M22 20H2"></path></svg>
+        <span style="font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 700; letter-spacing: -0.02em; color: #FFFFFF;">TeamBeacon</span>
+      </div>
+      <span style="font-size: 11px; color: #9AA1AA; font-variant-numeric: tabular-nums;">10 people</span>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 8px;">
+    <div style="font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #A2A8B0;">Type</div>
+    <div style="display: flex; flex-direction: column; gap: 5px;">
+      <div style="font-family: 'Space Grotesk', sans-serif; font-size: 27px; font-weight: 700; line-height: 1.1; letter-spacing: -0.03em;">Performance vs. Potential</div>
+      <div style="font-size: 13.5px; line-height: 1.6; color: #5A616B; max-width: 44ch; text-wrap: pretty;">Two people sit above the line on both axes. Consider promotion or expanded scope.</div>
+      <div style="display: inline-flex; align-self: flex-start; background: #FBEBD6; color: #8A480C; font-size: 10.5px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 9px; margin-top: 4px;">Sample data</div>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 8px;">
+    <div style="font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #A2A8B0;">Palette</div>
+    <div style="display: flex; gap: 8px;">
+      <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 4px;">
+        <div style="height: 34px; background: #FFFFFF; border: 1px solid #E1E4E8;"></div>
+        <div style="font-size: 9.5px; color: #A2A8B0;">Surface</div>
+      </div>
+      <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 4px;">
+        <div style="height: 34px; background: #121417;"></div>
+        <div style="font-size: 9.5px; color: #A2A8B0;">Ink</div>
+      </div>
+      <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 4px;">
+        <div style="height: 34px; background: #E8912B;"></div>
+        <div style="font-size: 9.5px; color: #A2A8B0;">Accent</div>
+      </div>
+      <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 4px;">
+        <div style="height: 34px; background: #F4F5F7;"></div>
+        <div style="font-size: 9.5px; color: #A2A8B0;">Wash</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 8px;">
+    <div style="font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #A2A8B0;">Nine-box</div>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px;">
+      <div style="height: 52px; background: #F5C862; display: flex; align-items: flex-start; padding: 6px;"><span style="font-size: 10px; font-weight: 600; color: #4A360C;">Casey R.</span></div>
+      <div style="height: 52px; background: #6FBE8E; display: flex; align-items: flex-start; padding: 6px;"><span style="font-size: 10px; font-weight: 600; color: #123A24;">Taylor K.</span></div>
+      <div style="height: 52px; background: #6FBE8E; display: flex; align-items: flex-start; padding: 6px;"><span style="font-size: 10px; font-weight: 600; color: #123A24;">Alex M.</span></div>
+      <div style="height: 52px; background: #E5877C; display: flex; align-items: flex-start; padding: 6px;"><span style="font-size: 10px; font-weight: 600; color: #501913;">Drew M.</span></div>
+      <div style="height: 52px; background: #F4F5F7;"></div>
+      <div style="height: 52px; background: #6FBE8E; display: flex; align-items: flex-start; padding: 6px;"><span style="font-size: 10px; font-weight: 600; color: #123A24;">Sam C.</span></div>
+      <div style="height: 52px; background: #E5877C; display: flex; align-items: flex-start; padding: 6px;"><span style="font-size: 10px; font-weight: 600; color: #501913;">Jordan L.</span></div>
+      <div style="height: 52px; background: #F4F5F7;"></div>
+      <div style="height: 52px; background: #F5C862; display: flex; align-items: flex-start; padding: 6px;"><span style="font-size: 10px; font-weight: 600; color: #4A360C;">Riley J.</span></div>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 8px;">
+    <div style="font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #A2A8B0;">Insight row &amp; action</div>
+    <div style="border: 1px solid #E1E4E8; display: flex; flex-direction: column;">
+      <div style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-bottom: 1px solid #E1E4E8;">
+        <span style="width: 8px; height: 34px; background: #C8503F; flex-shrink: 0;"></span>
+        <div style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1;">
+          <span style="font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: -0.01em;">Retention risk</span>
+          <span style="font-size: 12.5px; color: #5A616B;">Alex Morgan, Sam Chen, Riley Johnson</span>
+        </div>
+        <span style="font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700; color: #C8503F; font-variant-numeric: tabular-nums;">3</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px; padding: 12px 14px;">
+        <span style="width: 8px; height: 34px; background: #2E8B57; flex-shrink: 0;"></span>
+        <div style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1;">
+          <span style="font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: -0.01em;">Star</span>
+          <span style="font-size: 12.5px; color: #5A616B;">Alex Morgan, Avery Williams</span>
+        </div>
+        <span style="font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700; color: #2E8B57; font-variant-numeric: tabular-nums;">2</span>
+      </div>
+    </div>
+    <div style="display: flex; gap: 8px; margin-top: 6px;">
+      <button style="font-family: 'IBM Plex Sans', sans-serif; background: #121417; color: #FFFFFF; border: 0; padding: 11px 20px; font-size: 13.5px; font-weight: 600; cursor: pointer;">Load your team</button>
+      <button style="font-family: 'IBM Plex Sans', sans-serif; background: #FFFFFF; color: #121417; border: 1px solid #C9CED4; padding: 11px 20px; font-size: 13.5px; font-weight: 500; cursor: pointer;">Export</button>
+    </div>
+  </div>
+
+  <div style="border-top: 1px solid #E1E4E8; padding-top: 12px; font-size: 12px; line-height: 1.55; color: #646B75; text-wrap: pretty;">
+    <strong style="color: #121417;">Trade-off:</strong> the most memorable and the strongest at a glance, but saturated cells carry more visual weight — with a full roster the grids can shout, and it is the least neutral if you sell into conservative HR teams.
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

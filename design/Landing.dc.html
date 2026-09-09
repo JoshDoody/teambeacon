@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap">
+  <style>
+    body { margin: 0; background: #FFFFFF; font-family: 'Public Sans', ui-sans-serif, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: #1F4E79; } a:hover { color: #14324D; }
+  </style>
+</helmet>
+
+<div style="width: 1280px; background: #FFFFFF; color: #14181D; display: flex; flex-direction: column;">
+
+  <div style="border-bottom: 2px solid #14181D; padding: 18px 64px; display: flex; align-items: center; justify-content: space-between;">
+    <div style="display: flex; align-items: center; gap: 11px;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1F4E79" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10"></path><path d="M10 20V4"></path><path d="M16 20v-7"></path><path d="M22 20H2"></path></svg>
+      <span style="font-size: 19px; font-weight: 700; letter-spacing: -0.02em;">TeamBeacon</span>
+    </div>
+    <span style="display: inline-flex; align-items: center; gap: 8px; border: 1px solid #B8D3B9; background: #F4FAF5; color: #1D5735; font-size: 11.5px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; padding: 7px 12px;">Free while in development</span>
+  </div>
+
+  <!-- Hero: one sentence, one action -->
+  <div style="padding: 72px 64px 56px; display: flex; gap: 64px; align-items: flex-start;">
+    <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 22px; max-width: 620px;">
+      <div style="font-size: 46px; font-weight: 700; line-height: 1.08; letter-spacing: -0.035em; text-wrap: balance;">Know who to promote, develop, and keep.</div>
+      <div style="font-size: 17.5px; line-height: 1.6; color: #46505C; text-wrap: pretty;">Rate your team on four things you already have an opinion about. TeamBeacon plots them on two nine-box grids and tells you which people need a decision this quarter.</div>
+
+      <div style="display: flex; align-items: center; gap: 16px; margin-top: 4px;">
+        <a href="app/" style="display: inline-flex; align-items: center; gap: 9px; height: 52px; background: #1F4E79; color: #FFFFFF; padding: 0 26px; font-size: 15.5px; font-weight: 600; text-decoration: none;">
+          Open TeamBeacon
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </a>
+        <span style="font-size: 13.5px; color: #7A8593;">No account. No card. Nothing to cancel.</span>
+      </div>
+
+      <!-- Pricing honesty, stated plainly rather than buried -->
+      <div style="border: 1px solid #DDE2E8; border-left: 3px solid #1F4E79; padding: 16px 18px; display: flex; flex-direction: column; gap: 4px; max-width: 520px; margin-top: 10px;">
+        <span style="font-size: 14px; font-weight: 700;">Free now — $49 later.</span>
+        <span style="font-size: 13.5px; line-height: 1.55; color: #56606D; text-wrap: pretty;">TeamBeacon is free while it is in development. When it launches it becomes a one-time $49 purchase. Everything you see today is free until then.</span>
+      </div>
+    </div>
+
+    <!-- Product proof: the thing they're buying, shown not described -->
+    <div style="width: 420px; flex-shrink: 0; border: 1px solid #DDE2E8; display: flex; flex-direction: column;">
+      <div style="border-bottom: 1px solid #DDE2E8; padding: 11px 14px; display: flex; align-items: center; justify-content: space-between;">
+        <span style="font-size: 10.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #7A8593;">Performance vs. Potential</span>
+        <span style="font-size: 11px; color: #9AA3AF; font-variant-numeric: tabular-nums;">10 people</span>
+      </div>
+      <div style="padding: 14px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2px; background: #FFFFFF;">
+        <div style="height: 74px; background: #FBF0D9; box-shadow: inset 0 0 0 2px #B5842B; padding: 7px;"><span style="font-size: 11px; color: #6B4E12;">Casey R.</span></div>
+        <div style="height: 74px; background: #DFF0E2; box-shadow: inset 0 0 0 2px #2E7D4F; padding: 7px;"><span style="font-size: 11px; color: #1D5735;">Taylor K.</span></div>
+        <div style="height: 74px; background: #DFF0E2; box-shadow: inset 0 0 0 2px #2E7D4F; padding: 7px; display: flex; flex-direction: column; gap: 3px;"><span style="font-size: 11px; color: #1D5735;">Alex M.</span><span style="font-size: 11px; color: #1D5735;">Avery W.</span></div>
+        <div style="height: 74px; background: #FBE3E1; box-shadow: inset 0 0 0 2px #B23B32; padding: 7px;"><span style="font-size: 11px; color: #7E2A23;">Drew M.</span></div>
+        <div style="height: 74px; background: #F7F9FB; padding: 7px;"><span style="font-size: 11px; color: #7A8593;">Morgan P.</span></div>
+        <div style="height: 74px; background: #DFF0E2; box-shadow: inset 0 0 0 2px #2E7D4F; padding: 7px;"><span style="font-size: 11px; color: #1D5735;">Sam C.</span></div>
+        <div style="height: 74px; background: #FBE3E1; box-shadow: inset 0 0 0 2px #B23B32; padding: 7px;"><span style="font-size: 11px; color: #7E2A23;">Jordan L.</span></div>
+        <div style="height: 74px; background: #F7F9FB;"></div>
+        <div style="height: 74px; background: #FBF0D9; box-shadow: inset 0 0 0 2px #B5842B; padding: 7px;"><span style="font-size: 11px; color: #6B4E12;">Riley J.</span></div>
+      </div>
+      <div style="border-top: 1px solid #DDE2E8; padding: 12px 14px; display: flex; flex-direction: column; gap: 5px;">
+        <span style="font-size: 10.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #7A8593;">Act now</span>
+        <span style="font-size: 12.5px; color: #14181D;">3 people are a retention risk</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Three doubts a manager actually has -->
+  <div style="padding: 0 64px 64px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px;">
+    <div style="display: flex; flex-direction: column; gap: 9px; border-top: 2px solid #14181D; padding-top: 16px;">
+      <div style="font-size: 16.5px; font-weight: 700; letter-spacing: -0.015em;">Ten minutes, not a workshop</div>
+      <div style="font-size: 13.5px; line-height: 1.6; color: #56606D; text-wrap: pretty;">Four ratings per person, 1 to 3. Type them in or upload a spreadsheet you already keep. No process to roll out.</div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 9px; border-top: 2px solid #14181D; padding-top: 16px;">
+      <div style="font-size: 16.5px; font-weight: 700; letter-spacing: -0.015em;">It tells you who, and why</div>
+      <div style="font-size: 13.5px; line-height: 1.6; color: #56606D; text-wrap: pretty;">Not just a picture. The report names the people in each flagged cell and what the cell means for them.</div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 9px; border-top: 2px solid #14181D; padding-top: 16px;">
+      <div style="font-size: 16.5px; font-weight: 700; letter-spacing: -0.015em;">Your ratings stay yours</div>
+      <div style="font-size: 13.5px; line-height: 1.6; color: #56606D; text-wrap: pretty;">Everything runs in your browser and stays on your device. Nothing about your team is uploaded anywhere.</div>
+    </div>
+  </div>
+
+  <!-- Repeat the one action -->
+  <div style="border-top: 1px solid #DDE2E8; padding: 44px 64px 56px; display: flex; align-items: center; justify-content: space-between; gap: 40px;">
+    <div style="display: flex; flex-direction: column; gap: 5px;">
+      <span style="font-size: 21px; font-weight: 700; letter-spacing: -0.02em;">Try it on your own team in ten minutes.</span>
+      <span style="font-size: 13.5px; color: #7A8593;">Free while in development · one-time $49 at launch</span>
+    </div>
+    <a href="app/" style="display: inline-flex; align-items: center; gap: 9px; height: 52px; background: #1F4E79; color: #FFFFFF; padding: 0 26px; font-size: 15.5px; font-weight: 600; text-decoration: none; flex-shrink: 0;">
+      Open TeamBeacon
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+    </a>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

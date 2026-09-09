@@ -144,7 +144,7 @@ test.describe('CSV upload', () => {
 
   test('outlier report names Alice Chen as a Star', async ({ page }) => {
     await loadSampleCSV(page);
-    const starEntry = page.locator('#report-content .rounded-lg[data-coord="3,3"][data-grid-id="grid-perf-pot"]');
+    const starEntry = page.locator('#report-content [data-coord="3,3"][data-grid-id="grid-perf-pot"]');
     await expect(starEntry).toContainText('Alice Chen');
   });
 });
@@ -598,10 +598,10 @@ test.describe('Paywall disabled', () => {
     await page.waitForLoadState('networkidle');
 
     const cta = page.locator('#cta-free');
-    await expect(cta).toContainText('FREE RIGHT NOW');
-    await expect(cta).toContainText('free to use today');
-    // The part that must not be missable: it is not free forever.
-    await expect(cta).toContainText("This won't be free forever");
+    await expect(cta).toContainText('Free now');
+    await expect(cta).toContainText('free while it is in development');
+    // The part that must not be missable: it stops being free, and at what price.
+    await expect(cta).toContainText('When it launches it becomes a one-time');
     await expect(cta).toContainText('$49');
   });
 

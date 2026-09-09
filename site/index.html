@@ -4,94 +4,140 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TeamBeacon — Workforce 9-Box Analysis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="lib.js"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      fontFamily: { sans: ['"Public Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
+      colors: {
+        ink: '#14181D', muted: '#56606D', faint: '#7A8593', hairline: '#E7EBF0',
+        rule: '#DDE2E8', navy: '#1F4E79', 'navy-dark': '#14324D',
+        good: '#2E7D4F', 'good-bg': '#DFF0E2', 'good-ink': '#1D5735',
+        warn: '#B5842B', 'warn-bg': '#FBF0D9', 'warn-ink': '#6B4E12',
+        bad:  '#B23B32', 'bad-bg':  '#FBE3E1', 'bad-ink':  '#7E2A23',
+      },
+    } } };
+  </script>
 </head>
-<body class="bg-gray-50 min-h-screen font-sans text-gray-800">
+<body class="bg-white min-h-screen font-sans text-ink antialiased">
 
   <!-- Header -->
-  <header class="bg-white border-b border-gray-200 px-6 py-4 flex items-center gap-3">
-    <a id="logo-link" href="/" class="flex items-center gap-3 no-underline text-gray-800">
-      <div class="w-7 h-7 rounded bg-indigo-600 flex items-center justify-center">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-        </svg>
-      </div>
-      <h1 class="text-xl font-semibold tracking-tight">TeamBeacon</h1>
+  <header class="border-b-2 border-ink px-6 md:px-16 py-4 flex items-center justify-between gap-4">
+    <a id="logo-link" href="/" class="flex items-center gap-3 no-underline text-ink">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-[22px] h-[22px] text-navy" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M4 20V10" /><path d="M10 20V4" /><path d="M16 20v-7" /><path d="M22 20H2" />
+      </svg>
+      <span class="text-[19px] font-bold tracking-[-0.02em]">TeamBeacon</span>
     </a>
+    <span class="hidden sm:inline-flex items-center border border-[#B8D3B9] bg-[#F4FAF5] text-good-ink text-[11.5px] font-bold uppercase tracking-[0.09em] px-3 py-1.5">
+      Free while in development
+    </span>
   </header>
 
-  <main class="max-w-3xl mx-auto px-6 py-20 space-y-12 text-center">
+  <main>
 
     <!-- Hero -->
-    <div class="space-y-4">
-      <h2 class="text-4xl font-bold text-gray-900 leading-tight">
-        Know who to promote, develop, and retain.
-      </h2>
-      <p class="text-xl text-gray-500 max-w-xl mx-auto">
-        TeamBeacon is a simple 9-box workforce analysis tool that helps managers
-        make better decisions about their team.
-      </p>
-    </div>
-
-    <!-- Features -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-      <div class="bg-white rounded-xl border border-gray-200 p-5 space-y-2">
-        <div class="text-indigo-600 font-semibold text-sm">No software to install</div>
-        <p class="text-sm text-gray-500">Runs entirely in your browser. Upload a CSV or manually enter your team data.</p>
-      </div>
-      <div class="bg-white rounded-xl border border-gray-200 p-5 space-y-2">
-        <div class="text-indigo-600 font-semibold text-sm">Private by design</div>
-        <p class="text-sm text-gray-500">Your employee data never leaves your browser. No accounts, no servers, no data stored.</p>
-      </div>
-      <div class="bg-white rounded-xl border border-gray-200 p-5 space-y-2">
-        <div class="text-indigo-600 font-semibold text-sm">Actionable insights</div>
-        <p class="text-sm text-gray-500">Two 9-box grids and a prioritized report highlight your stars, risks, and opportunities.</p>
-      </div>
-    </div>
-
-    <!-- CTA — free while the paywall is off (PAYWALL_ENABLED in lib.js).
-         Exactly one of #cta-free / #cta-paid is shown; the script below picks. -->
-    <div id="cta-free" class="hidden bg-emerald-50 border-2 border-emerald-300 rounded-2xl px-8 py-10 space-y-5">
-      <div class="inline-block bg-emerald-600 text-white text-sm font-bold px-4 py-1.5 rounded-full tracking-wide">
-        FREE RIGHT NOW
-      </div>
-
-      <div class="space-y-1">
-        <div class="text-5xl font-bold text-emerald-700">$0</div>
-        <div class="text-emerald-800 text-sm font-medium">while TeamBeacon is in development</div>
-      </div>
-
-      <p class="text-gray-700 text-base max-w-lg mx-auto leading-relaxed">
-        The full tool is <strong class="text-gray-900">free to use today</strong> — no account,
-        no credit card, nothing to cancel.
-      </p>
-
-      <div class="bg-white/70 border border-emerald-200 rounded-lg px-5 py-4 max-w-lg mx-auto">
-        <p class="text-gray-700 text-sm leading-relaxed">
-          <strong class="text-gray-900">This won't be free forever.</strong>
-          When TeamBeacon launches it will become a one-time
-          <strong class="text-gray-900">$<span class="future-price">49</span></strong> purchase.
-          Everything you see now is free until then.
+    <div class="px-6 md:px-16 pt-12 md:pt-16 pb-12 flex flex-col lg:flex-row gap-10 lg:gap-16 items-start max-w-[1280px] mx-auto">
+      <div class="flex-1 flex flex-col gap-5 max-w-[620px]">
+        <h2 class="text-[34px] md:text-[46px] font-bold leading-[1.08] tracking-[-0.035em] text-balance">
+          Know who to promote, develop, and keep.
+        </h2>
+        <p class="text-[17px] md:text-[17.5px] leading-relaxed text-[#46505C] text-pretty">
+          Rate your team on four things you already have an opinion about. TeamBeacon plots them on
+          two nine-box grids and tells you which people need a decision this quarter.
         </p>
+
+        <!-- CTA — free while the paywall is off (PAYWALL_ENABLED in lib.js).
+             Exactly one of #cta-free / #cta-paid is shown; the script below picks. -->
+        <div id="cta-free" class="hidden flex flex-col gap-4 mt-1">
+          <div class="flex flex-wrap items-center gap-4">
+            <a href="app/" id="try-free-btn"
+              class="inline-flex items-center gap-2.5 h-[52px] bg-navy text-white px-6 text-[15.5px] font-semibold no-underline hover:bg-navy-dark transition-colors">
+              Open TeamBeacon
+              <svg class="w-[17px] h-[17px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+            </a>
+            <span class="text-[13.5px] text-faint">No account. No card. Nothing to cancel.</span>
+          </div>
+
+          <div class="border border-rule border-l-[3px] border-l-navy px-5 py-4 flex flex-col gap-1 max-w-[520px]">
+            <span class="text-[14px] font-bold">Free now — $<span class="future-price">49</span> later.</span>
+            <span class="text-[13.5px] leading-relaxed text-muted text-pretty">
+              TeamBeacon is free while it is in development. When it launches it becomes a one-time
+              $<span class="future-price">49</span> purchase. Everything you see today is free until then.
+            </span>
+          </div>
+        </div>
+
+        <!-- CTA — paid. Restored verbatim when PAYWALL_ENABLED flips back to true. -->
+        <div id="cta-paid" class="hidden flex flex-col gap-4 mt-1 max-w-[520px]">
+          <div class="flex items-baseline gap-3">
+            <span class="text-[38px] font-bold leading-none tracking-[-0.03em]">$<span class="future-price">49</span></span>
+            <span class="text-[13.5px] text-muted">One-time purchase. No subscription. 72-hour access window.</span>
+          </div>
+          <button id="buy-btn" onclick="startCheckout()"
+            class="inline-flex items-center gap-2.5 h-[52px] self-start bg-navy text-white px-6 text-[15.5px] font-semibold hover:bg-navy-dark transition-colors">
+            Get Access
+            <svg class="w-[17px] h-[17px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+          </button>
+          <div id="buy-error" class="hidden text-sm text-bad"></div>
+          <p class="text-xs text-faint">Powered by Stripe. Secure checkout.</p>
+        </div>
       </div>
 
-      <a href="app/" id="try-free-btn"
-        class="inline-block bg-emerald-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-emerald-700 transition">
-        Open TeamBeacon — free →
-      </a>
+      <!-- What they get, shown rather than described -->
+      <div class="w-full lg:w-[420px] shrink-0 border border-rule">
+        <div class="border-b border-rule px-3.5 py-2.5 flex items-center justify-between">
+          <span class="text-[10.5px] font-bold uppercase tracking-[0.12em] text-faint">Performance vs. Potential</span>
+          <span class="text-[11px] text-[#9AA3AF] tabular-nums">10 people</span>
+        </div>
+        <div class="p-3.5 grid grid-cols-3 gap-0.5">
+          <div class="h-[74px] p-1.5 bg-warn-bg shadow-[inset_0_0_0_2px_#B5842B]"><span class="text-[11px] text-warn-ink">Casey R.</span></div>
+          <div class="h-[74px] p-1.5 bg-good-bg shadow-[inset_0_0_0_2px_#2E7D4F]"><span class="text-[11px] text-good-ink">Taylor K.</span></div>
+          <div class="h-[74px] p-1.5 bg-good-bg shadow-[inset_0_0_0_2px_#2E7D4F] flex flex-col gap-0.5"><span class="text-[11px] text-good-ink">Alex M.</span><span class="text-[11px] text-good-ink">Avery W.</span></div>
+          <div class="h-[74px] p-1.5 bg-bad-bg shadow-[inset_0_0_0_2px_#B23B32]"><span class="text-[11px] text-bad-ink">Drew M.</span></div>
+          <div class="h-[74px] p-1.5 bg-[#F7F9FB]"><span class="text-[11px] text-faint">Morgan P.</span></div>
+          <div class="h-[74px] p-1.5 bg-good-bg shadow-[inset_0_0_0_2px_#2E7D4F]"><span class="text-[11px] text-good-ink">Sam C.</span></div>
+          <div class="h-[74px] p-1.5 bg-bad-bg shadow-[inset_0_0_0_2px_#B23B32]"><span class="text-[11px] text-bad-ink">Jordan L.</span></div>
+          <div class="h-[74px] p-1.5 bg-[#F7F9FB]"></div>
+          <div class="h-[74px] p-1.5 bg-warn-bg shadow-[inset_0_0_0_2px_#B5842B]"><span class="text-[11px] text-warn-ink">Riley J.</span></div>
+        </div>
+        <div class="border-t border-rule px-3.5 py-3 flex flex-col gap-1.5">
+          <span class="text-[10.5px] font-bold uppercase tracking-[0.12em] text-faint">Act now</span>
+          <span class="text-[12.5px]">3 people are a retention risk</span>
+        </div>
+      </div>
     </div>
 
-    <!-- CTA — paid. Restored verbatim when PAYWALL_ENABLED flips back to true. -->
-    <div id="cta-paid" class="hidden bg-indigo-50 border border-indigo-200 rounded-2xl px-8 py-10 space-y-4">
-      <div class="text-3xl font-bold text-gray-900">$<span class="future-price">49</span></div>
-      <div class="text-gray-500 text-sm">One-time purchase. No subscription. 72-hour access window.</div>
-      <button id="buy-btn" onclick="startCheckout()"
-        class="bg-indigo-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-indigo-700 transition">
-        Get Access →
-      </button>
-      <div id="buy-error" class="hidden text-sm text-red-600 mt-2"></div>
-      <p class="text-xs text-gray-400">Powered by Stripe. Secure checkout.</p>
+    <!-- The doubts a manager actually has -->
+    <div class="px-6 md:px-16 pb-16 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10 max-w-[1280px] mx-auto">
+      <div class="flex flex-col gap-2 border-t-2 border-ink pt-4">
+        <div class="text-[16.5px] font-bold tracking-[-0.015em]">Ten minutes, not a workshop</div>
+        <p class="text-[13.5px] leading-relaxed text-muted text-pretty">Four ratings per person, 1 to 3. Type them in or upload a spreadsheet you already keep. No process to roll out.</p>
+      </div>
+      <div class="flex flex-col gap-2 border-t-2 border-ink pt-4">
+        <div class="text-[16.5px] font-bold tracking-[-0.015em]">It tells you who, and why</div>
+        <p class="text-[13.5px] leading-relaxed text-muted text-pretty">Not just a picture. The report names the people in each flagged cell and what that cell means for them.</p>
+      </div>
+      <div class="flex flex-col gap-2 border-t-2 border-ink pt-4">
+        <div class="text-[16.5px] font-bold tracking-[-0.015em]">Your ratings stay yours</div>
+        <p class="text-[13.5px] leading-relaxed text-muted text-pretty">Everything runs in your browser and stays on your device. Nothing about your team is uploaded anywhere.</p>
+      </div>
+    </div>
+
+    <!-- Repeat the one action -->
+    <div class="border-t border-rule px-6 md:px-16 py-11 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 max-w-[1280px] mx-auto">
+      <div class="flex flex-col gap-1">
+        <span class="text-[21px] font-bold tracking-[-0.02em]">Try it on your own team in ten minutes.</span>
+        <span class="text-[13.5px] text-faint">Free while in development · one-time $<span class="future-price">49</span> at launch</span>
+      </div>
+      <a href="app/"
+        class="inline-flex items-center gap-2.5 h-[52px] bg-navy text-white px-6 text-[15.5px] font-semibold no-underline hover:bg-navy-dark transition-colors shrink-0">
+        Open TeamBeacon
+        <svg class="w-[17px] h-[17px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+      </a>
     </div>
 
   </main>

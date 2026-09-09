@@ -1,0 +1,160 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap">
+  <style>
+    body { margin: 0; background: #FFFFFF; font-family: 'Public Sans', ui-sans-serif, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: #1F4E79; } a:hover { color: #14324D; }
+  </style>
+</helmet>
+
+<div style="width: 1280px; background: #FFFFFF; color: #14181D; display: flex; flex-direction: column;">
+
+  <!-- Header -->
+  <div style="border-bottom: 2px solid #14181D; padding: 18px 48px; display: flex; align-items: center; justify-content: space-between;">
+    <div style="display: flex; align-items: center; gap: 11px;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1F4E79" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10"></path><path d="M10 20V4"></path><path d="M16 20v-7"></path><path d="M22 20H2"></path></svg>
+      <span style="font-size: 19px; font-weight: 700; letter-spacing: -0.02em;">TeamBeacon</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <button style="font-family: 'Public Sans', sans-serif; height: 44px; background: #FFFFFF; color: #14181D; border: 1px solid #C6CDD6; padding: 0 18px; font-size: 13.5px; font-weight: 500; cursor: pointer;">Export CSV</button>
+      <button style="font-family: 'Public Sans', sans-serif; height: 44px; background: #FFFFFF; color: #56606D; border: 1px solid #DDE2E8; padding: 0 18px; font-size: 13.5px; font-weight: 500; cursor: pointer;">Start over</button>
+    </div>
+  </div>
+
+  <div style="padding: 34px 48px 48px; display: flex; flex-direction: column; gap: 30px;">
+
+    <!-- Title + provenance. The answer leads; loading data is secondary. -->
+    <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 40px;">
+      <div style="display: flex; flex-direction: column; gap: 7px;">
+        <div style="font-size: 10.5px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #7A8593;">Talent review</div>
+        <div style="font-size: 30px; font-weight: 700; line-height: 1.1; letter-spacing: -0.025em;">10 people</div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <span style="display: inline-flex; align-items: center; gap: 7px; border: 1px solid #E3C77E; background: #FDF7E8; color: #6B4E12; font-size: 11.5px; font-weight: 600; padding: 7px 11px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5"></path><path d="M12 16h.01"></path></svg>
+          Sample data
+        </span>
+        <button style="font-family: 'Public Sans', sans-serif; height: 44px; background: #1F4E79; color: #FFFFFF; border: 0; padding: 0 22px; font-size: 13.5px; font-weight: 600; cursor: pointer;">Load your team</button>
+      </div>
+    </div>
+
+    <!-- Headline counts: the three things a manager actually came for -->
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: #DDE2E8; border-top: 1px solid #DDE2E8; border-bottom: 1px solid #DDE2E8;">
+      <div style="background: #FFFFFF; padding: 18px 22px 18px 0; display: flex; flex-direction: column; gap: 5px;">
+        <div style="display: flex; align-items: center; gap: 7px;">
+          <span style="width: 9px; height: 9px; background: #2E7D4F;"></span>
+          <span style="font-size: 10.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #7A8593;">Stars</span>
+        </div>
+        <div style="font-size: 34px; font-weight: 700; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums;">4</div>
+        <div style="font-size: 12.5px; color: #56606D;">High performance and high potential</div>
+      </div>
+      <div style="background: #FFFFFF; padding: 18px 22px; display: flex; flex-direction: column; gap: 5px;">
+        <div style="display: flex; align-items: center; gap: 7px;">
+          <span style="width: 9px; height: 9px; background: #B23B32;"></span>
+          <span style="font-size: 10.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #7A8593;">Retention risk</span>
+        </div>
+        <div style="font-size: 34px; font-weight: 700; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums;">3</div>
+        <div style="font-size: 12.5px; color: #56606D;">Likely to leave, costly if they do</div>
+      </div>
+      <div style="background: #FFFFFF; padding: 18px 0 18px 22px; display: flex; flex-direction: column; gap: 5px;">
+        <div style="display: flex; align-items: center; gap: 7px;">
+          <span style="width: 9px; height: 9px; background: #B5842B;"></span>
+          <span style="font-size: 10.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #7A8593;">Needs attention</span>
+        </div>
+        <div style="font-size: 34px; font-weight: 700; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums;">2</div>
+        <div style="font-size: 12.5px; color: #56606D;">Below the line on both axes</div>
+      </div>
+    </div>
+
+    <!-- The two grids -->
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 44px;">
+
+      <!-- Performance vs Potential -->
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; flex-direction: column; gap: 3px;">
+          <div style="font-size: 10.5px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #7A8593;">Chart 01</div>
+          <div style="font-size: 20px; font-weight: 700; letter-spacing: -0.02em;">Performance vs. Potential</div>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <div style="display: flex; flex-direction: column; justify-content: space-between; align-items: center; width: 22px; padding: 2px 0;">
+            <span style="font-size: 11px; color: #9AA3AF; font-variant-numeric: tabular-nums;">3</span>
+            <span style="font-size: 11px; color: #9AA3AF; font-variant-numeric: tabular-nums;">2</span>
+            <span style="font-size: 11px; color: #9AA3AF; font-variant-numeric: tabular-nums;">1</span>
+          </div>
+          <div style="flex-grow: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2px; background: #DDE2E8; padding: 2px;">
+            <div style="min-height: 96px; background: #FBF0D9; box-shadow: inset 0 0 0 2px #B5842B; padding: 9px; display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; color: #6B4E12;">Casey Rivera</span></div>
+            <div style="min-height: 96px; background: #DFF0E2; box-shadow: inset 0 0 0 2px #2E7D4F; padding: 9px; display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; color: #1D5735;">Taylor Kim</span></div>
+            <div style="min-height: 96px; background: #DFF0E2; box-shadow: inset 0 0 0 2px #2E7D4F; padding: 9px; display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; color: #1D5735;">Alex Morgan</span><span style="font-size: 12px; color: #1D5735;">Avery Williams</span></div>
+            <div style="min-height: 96px; background: #FBE3E1; box-shadow: inset 0 0 0 2px #B23B32; padding: 9px; display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; color: #7E2A23;">Drew Martinez</span></div>
+            <div style="min-height: 96px; background: #FFFFFF; padding: 9px; display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; color: #56606D;">Morgan Price</span><span style="font-size: 12px; color: #56606D;">Quinn Thompson</span></div>
+            <div style="min-height: 96px; background: #DFF0E2; box-shadow: inset 0 0 0 2px #2E7D4F; padding: 9px; display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; color: #1D5735;">Sam Chen</span></div>
+            <div style="min-height: 96px; background: #FBE3E1; box-shadow: inset 0 0 0 2px #B23B32; padding: 9px; display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; color: #7E2A23;">Jordan Lee</span></div>
+            <div style="min-height: 96px; background: #FFFFFF;"></div>
+            <div style="min-height: 96px; background: #FBF0D9; box-shadow: inset 0 0 0 2px #B5842B; padding: 9px; display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; color: #6B4E12;">Riley Johnson</span></div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <div style="width: 22px;"></div>
+          <div style="flex-grow: 1; display: flex; justify-content: space-between; padding: 0 2px;">
+            <span style="font-size: 11px; color: #9AA3AF;">Performance 1</span>
+            <span style="font-size: 11px; color: #9AA3AF;">2</span>
+            <span style="font-size: 11px; color: #9AA3AF;">3</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Risk vs Impact -->
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; flex-direction: column; gap: 3px;">
+          <div style="font-size: 10.5px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #7A8593;">Chart 02</div>
+          <div style="font-size: 20px; font-weight: 700; letter-spacing: -0.02em;">Risk of Loss vs. Impact of Loss</div>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <div style="display: flex; flex-direction: column; justify-content: space-between; align-items: center; width: 22px; padding: 2px 0;">
+            <span style="font-size: 11px; color: #9AA3AF; font-variant-numeric: tabular-nums;">3</span>
+            <span style="font-size: 11px; color: #9AA3AF; font-variant-numeric: tabular-nums;">2</span>
+            <span style="font-size: 11px; color: #9AA3AF; font-variant-numeric: tabular-nums;">1</span>
+          </div>
+          <div style="flex-grow: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2px; background: #DDE2E8; padding: 2px;">
+            <div style="min-height: 96px; background: #FBF0D9; box-shadow: inset 0 0 0 2px #B5842B; padding: 9px; display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; color: #6B4E12;">Quinn Thompson</span><span style="font-size: 12px; color: #6B4E12;">Avery Williams</span></div>
+            <div style="min-height: 96px; background: #FBE3E1; box-shadow: inset 0 0 0 2px #B23B32; padding: 9px; display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; color: #7E2A23;">Alex Morgan</span></div>
+            <div style="min-height: 96px; background: #FBE3E1; box-shadow: inset 0 0 0 2px #B23B32; padding: 9px; display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; color: #7E2A23;">Sam Chen</span></div>
+            <div style="min-height: 96px; background: #FFFFFF; padding: 9px; display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; color: #56606D;">Jordan Lee</span></div>
+            <div style="min-height: 96px; background: #FFFFFF; padding: 9px; display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; color: #56606D;">Taylor Kim</span><span style="font-size: 12px; color: #56606D;">Morgan Price</span></div>
+            <div style="min-height: 96px; background: #FBE3E1; box-shadow: inset 0 0 0 2px #B23B32; padding: 9px; display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; color: #7E2A23;">Riley Johnson</span></div>
+            <div style="min-height: 96px; background: #FFFFFF; padding: 9px; display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; color: #56606D;">Casey Rivera</span></div>
+            <div style="min-height: 96px; background: #FFFFFF; padding: 9px; display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; color: #56606D;">Drew Martinez</span></div>
+            <div style="min-height: 96px; background: #FFFFFF;"></div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <div style="width: 22px;"></div>
+          <div style="flex-grow: 1; display: flex; justify-content: space-between; padding: 0 2px;">
+            <span style="font-size: 11px; color: #9AA3AF;">Risk of loss 1</span>
+            <span style="font-size: 11px; color: #9AA3AF;">2</span>
+            <span style="font-size: 11px; color: #9AA3AF;">3</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Legend, stated once for both charts -->
+    <div style="border-top: 1px solid #E7EBF0; padding-top: 14px; display: flex; align-items: center; gap: 26px;">
+      <span style="font-size: 10.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #9AA3AF;">Reading the colour</span>
+      <span style="display: inline-flex; align-items: center; gap: 8px;"><span style="width: 13px; height: 13px; background: #DFF0E2; box-shadow: inset 0 0 0 2px #2E7D4F;"></span><span style="font-size: 12.5px; color: #56606D;">Strength — act to keep or promote</span></span>
+      <span style="display: inline-flex; align-items: center; gap: 8px;"><span style="width: 13px; height: 13px; background: #FBF0D9; box-shadow: inset 0 0 0 2px #B5842B;"></span><span style="font-size: 12.5px; color: #56606D;">Watch</span></span>
+      <span style="display: inline-flex; align-items: center; gap: 8px;"><span style="width: 13px; height: 13px; background: #FBE3E1; box-shadow: inset 0 0 0 2px #B23B32;"></span><span style="font-size: 12.5px; color: #56606D;">Needs a decision</span></span>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

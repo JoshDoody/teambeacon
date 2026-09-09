@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap">
+  <style>
+    body { margin: 0; background: #FFFFFF; font-family: 'Public Sans', ui-sans-serif, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: #1F4E79; } a:hover { color: #14324D; }
+  </style>
+</helmet>
+
+<div style="box-sizing: border-box; width: 1280px; background: #FFFFFF; color: #14181D; display: flex; flex-direction: column; padding: 40px 48px 48px; gap: 26px;">
+
+  <div style="display: flex; align-items: flex-end; justify-content: space-between;">
+    <div style="display: flex; flex-direction: column; gap: 6px;">
+      <div style="font-size: 10.5px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #7A8593;">Section 02</div>
+      <div style="font-size: 26px; font-weight: 700; letter-spacing: -0.025em;">What to do about it</div>
+      <div style="font-size: 14px; line-height: 1.55; color: #56606D; max-width: 62ch; text-wrap: pretty;">Only the cells that need a decision. Everyone sitting in the middle is working as expected and is left out on purpose.</div>
+    </div>
+    <button style="font-family: 'Public Sans', sans-serif; height: 44px; background: #FFFFFF; color: #14181D; border: 1px solid #C6CDD6; padding: 0 18px; font-size: 13.5px; font-weight: 500; cursor: pointer;">Print / save PDF</button>
+  </div>
+
+  <!-- ACT NOW -->
+  <div style="display: flex; flex-direction: column; gap: 0;">
+    <div style="display: flex; align-items: center; gap: 11px; border-bottom: 2px solid #14181D; padding-bottom: 9px;">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#B23B32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 20h20L12 3Z"></path><path d="M12 10v4"></path><path d="M12 17h.01"></path></svg>
+      <span style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase;">Act now</span>
+      <span style="font-size: 12.5px; color: #7A8593; font-variant-numeric: tabular-nums;">5 people across 2 findings</span>
+    </div>
+
+    <!-- One row per finding, people grouped — not one card per person -->
+    <div style="display: grid; grid-template-columns: 190px 1fr 300px; gap: 24px; padding: 20px 0; border-bottom: 1px solid #E7EBF0; align-items: start;">
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <span style="display: inline-flex; align-self: flex-start; align-items: center; gap: 7px; background: #FBE3E1; color: #7E2A23; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 10px;">Retention risk</span>
+        <span style="font-size: 11.5px; color: #9AA3AF;">Risk × Impact</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 9px;">
+        <div style="display: flex; flex-wrap: wrap; gap: 7px;">
+          <span style="border: 1px solid #E6C9C6; background: #FDF4F3; color: #14181D; font-size: 13.5px; font-weight: 500; padding: 7px 12px;">Alex Morgan</span>
+          <span style="border: 1px solid #E6C9C6; background: #FDF4F3; color: #14181D; font-size: 13.5px; font-weight: 500; padding: 7px 12px;">Sam Chen</span>
+          <span style="border: 1px solid #E6C9C6; background: #FDF4F3; color: #14181D; font-size: 13.5px; font-weight: 500; padding: 7px 12px;">Riley Johnson</span>
+        </div>
+      </div>
+      <div style="font-size: 13px; line-height: 1.6; color: #56606D; text-wrap: pretty;">Likely to leave and expensive to replace. Start succession cover or a retention conversation this quarter.</div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 190px 1fr 300px; gap: 24px; padding: 20px 0; border-bottom: 1px solid #E7EBF0; align-items: start;">
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <span style="display: inline-flex; align-self: flex-start; align-items: center; gap: 7px; background: #FBE3E1; color: #7E2A23; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 10px;">Needs attention</span>
+        <span style="font-size: 11.5px; color: #9AA3AF;">Performance × Potential</span>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 7px;">
+        <span style="border: 1px solid #E6C9C6; background: #FDF4F3; color: #14181D; font-size: 13.5px; font-weight: 500; padding: 7px 12px;">Jordan Lee</span>
+        <span style="border: 1px solid #E6C9C6; background: #FDF4F3; color: #14181D; font-size: 13.5px; font-weight: 500; padding: 7px 12px;">Drew Martinez</span>
+      </div>
+      <div style="font-size: 13px; line-height: 1.6; color: #56606D; text-wrap: pretty;">Not performing and at or near their ceiling. Decide whether this is the right seat, or the right organisation.</div>
+    </div>
+  </div>
+
+  <!-- OPPORTUNITIES -->
+  <div style="display: flex; flex-direction: column; gap: 0; margin-top: 6px;">
+    <div style="display: flex; align-items: center; gap: 11px; border-bottom: 2px solid #14181D; padding-bottom: 9px;">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#2E7D4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v13"></path><path d="m7 8 5-5 5 5"></path><path d="M5 21h14"></path></svg>
+      <span style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase;">Opportunities</span>
+      <span style="font-size: 12.5px; color: #7A8593; font-variant-numeric: tabular-nums;">4 people across 2 findings</span>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 190px 1fr 300px; gap: 24px; padding: 20px 0; border-bottom: 1px solid #E7EBF0; align-items: start;">
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <span style="display: inline-flex; align-self: flex-start; align-items: center; gap: 7px; background: #DFF0E2; color: #1D5735; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 10px;">Star</span>
+        <span style="font-size: 11.5px; color: #9AA3AF;">Performance × Potential</span>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 7px;">
+        <span style="border: 1px solid #C4DECB; background: #F4FAF5; color: #14181D; font-size: 13.5px; font-weight: 500; padding: 7px 12px;">Alex Morgan</span>
+        <span style="border: 1px solid #C4DECB; background: #F4FAF5; color: #14181D; font-size: 13.5px; font-weight: 500; padding: 7px 12px;">Avery Williams</span>
+        <span style="border: 1px solid #C4DECB; background: #F4FAF5; color: #14181D; font-size: 13.5px; font-weight: 500; padding: 7px 12px;">Taylor Kim</span>
+        <span style="border: 1px solid #C4DECB; background: #F4FAF5; color: #14181D; font-size: 13.5px; font-weight: 500; padding: 7px 12px;">Sam Chen</span>
+      </div>
+      <div style="font-size: 13px; line-height: 1.6; color: #56606D; text-wrap: pretty;">Performing well with room above them. Look for a promotion or a wider remit before someone else offers one.</div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 190px 1fr 300px; gap: 24px; padding: 20px 0; align-items: start;">
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <span style="display: inline-flex; align-self: flex-start; align-items: center; gap: 7px; background: #FBF0D9; color: #6B4E12; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 10px;">Watch</span>
+        <span style="font-size: 11.5px; color: #9AA3AF;">Performance × Potential</span>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 7px;">
+        <span style="border: 1px solid #E9DAB4; background: #FDFAF1; color: #14181D; font-size: 13.5px; font-weight: 500; padding: 7px 12px;">Casey Rivera</span>
+        <span style="border: 1px solid #E9DAB4; background: #FDFAF1; color: #14181D; font-size: 13.5px; font-weight: 500; padding: 7px 12px;">Riley Johnson</span>
+      </div>
+      <div style="font-size: 13px; line-height: 1.6; color: #56606D; text-wrap: pretty;">Strong on one axis, weak on the other. Usually a coaching or role-fit question rather than a performance one.</div>
+    </div>
+  </div>
+
+  <div style="border-top: 1px solid #E7EBF0; padding-top: 14px; font-size: 12.5px; color: #7A8593; text-wrap: pretty;">
+    Nobody else on the roster falls in a flagged cell. Ratings stay on this device — nothing is uploaded.
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

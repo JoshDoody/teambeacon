@@ -1,0 +1,44 @@
+{
+  "pages": [
+    { "id": "page-1", "name": "Directions" },
+    { "id": "page-2", "name": "Screens" }
+  ],
+  "artboards": [
+    { "file": "DirectionA.dc.html", "page": "page-1", "x": 0,    "y": 0, "w": 480,  "h": 1180, "title": "A — Field Report" },
+    { "file": "DirectionB.dc.html", "page": "page-1", "x": 580,  "y": 0, "w": 480,  "h": 1180, "title": "B — Briefing" },
+    { "file": "DirectionC.dc.html", "page": "page-1", "x": 1160, "y": 0, "w": 480,  "h": 1180, "title": "C — Signal" },
+
+    { "file": "Landing.dc.html",    "page": "page-2", "x": 0,    "y": 0, "w": 1280, "h": 1180, "title": "Landing — free state" },
+    { "file": "Main.dc.html",       "page": "page-2", "x": 1400, "y": 0, "w": 1280, "h": 1180, "title": "App — grids" },
+    { "file": "Report.dc.html",     "page": "page-2", "x": 2800, "y": 0, "w": 1280, "h": 1000, "title": "App — what to do about it" },
+    { "file": "ManualEdit.dc.html", "page": "page-2", "x": 4200, "y": 0, "w": 1280, "h": 780,  "title": "App — enter your team" },
+    { "file": "EmptyState.dc.html", "page": "page-2", "x": 5600, "y": 0, "w": 1280, "h": 700,  "title": "App — nothing loaded" }
+  ],
+  "annotations": [
+    {
+      "id": "pick-a-direction",
+      "page": "page-1",
+      "x": 0,
+      "y": -190,
+      "w": 700,
+      "text": "PICK ONE — then the Screens page gets rebuilt in it.\n\nAll three keep the red / yellow / green meanings from lib.js exactly: green = Star, red = Needs Attention / Retention Risk, yellow = Watch / Monitor. Only the hues are tuned per direction.\n\nEach carries its own trade-off at the bottom. B is currently applied to the Screens page — not a verdict, just the one that had to be built out."
+    },
+    {
+      "id": "screens-note",
+      "page": "page-2",
+      "x": 0,
+      "y": -230,
+      "w": 780,
+      "text": "The full set, drawn in Direction B.\n\nThree things changed beyond paint:\n1. The answer leads. Grids and counts come first; loading data drops to a secondary action. Today the upload panel outranks the charts a manager came to read.\n2. The report groups people by finding instead of giving each person a full-width card. Ten people used to mean ten stacked cards.\n3. No emoji. The 🚨 / 🔑 headers become drawn icons and typographic labels — that was the main thing reading consumer-grade.\n\nCopy is drafted, not final."
+    },
+    {
+      "id": "landing-note",
+      "page": "page-2",
+      "x": 0,
+      "y": 1240,
+      "w": 560,
+      "text": "Landing keeps the free/paid split you shipped: this is the FREE state. The $49-later line stays in the hero rather than the footer, so nobody can miss it."
+    }
+  ],
+  "launch": { "view": "canvas", "page": "page-1" }
+}

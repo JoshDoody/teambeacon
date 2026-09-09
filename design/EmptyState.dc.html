@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap">
+  <style>
+    body { margin: 0; background: #FFFFFF; font-family: 'Public Sans', ui-sans-serif, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: #1F4E79; } a:hover { color: #14324D; }
+  </style>
+</helmet>
+
+<div style="width: 1280px; background: #FFFFFF; color: #14181D; display: flex; flex-direction: column;">
+
+  <div style="border-bottom: 2px solid #14181D; padding: 18px 48px; display: flex; align-items: center; justify-content: space-between;">
+    <div style="display: flex; align-items: center; gap: 11px;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1F4E79" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10"></path><path d="M10 20V4"></path><path d="M16 20v-7"></path><path d="M22 20H2"></path></svg>
+      <span style="font-size: 19px; font-weight: 700; letter-spacing: -0.02em;">TeamBeacon</span>
+    </div>
+  </div>
+
+  <div style="padding: 76px 48px 80px; display: flex; gap: 64px; align-items: flex-start;">
+
+    <!-- The ask, and the two ways to answer it -->
+    <div style="flex-grow: 1; max-width: 560px; display: flex; flex-direction: column; gap: 24px;">
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="font-size: 10.5px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #7A8593;">Nothing loaded</div>
+        <div style="font-size: 30px; font-weight: 700; line-height: 1.12; letter-spacing: -0.03em; text-wrap: balance;">Add your team to see the grids.</div>
+        <div style="font-size: 15px; line-height: 1.6; color: #46505C; text-wrap: pretty;">You need four ratings per person — performance, potential, risk of loss, impact of loss — each 1 to 3. Most managers can do a team of ten from memory.</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <button style="font-family: 'Public Sans', sans-serif; display: inline-flex; align-items: center; justify-content: space-between; height: 60px; background: #1F4E79; color: #FFFFFF; border: 0; padding: 0 22px; font-size: 15px; font-weight: 600; cursor: pointer; text-align: left;">
+          <span style="display: flex; flex-direction: column; gap: 2px;">
+            <span>Type it in</span>
+            <span style="font-size: 12.5px; font-weight: 400; color: #C6D7E6;">Start with one person, add as you go</span>
+          </span>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </button>
+        <button style="font-family: 'Public Sans', sans-serif; display: inline-flex; align-items: center; justify-content: space-between; height: 60px; background: #FFFFFF; color: #14181D; border: 1px solid #C6CDD6; padding: 0 22px; font-size: 15px; font-weight: 600; cursor: pointer; text-align: left;">
+          <span style="display: flex; flex-direction: column; gap: 2px;">
+            <span>Upload a CSV</span>
+            <span style="font-size: 12.5px; font-weight: 400; color: #7A8593;">Or paste a published Google Sheet link</span>
+          </span>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </button>
+      </div>
+
+      <div style="border-top: 1px solid #E7EBF0; padding-top: 16px; display: flex; flex-direction: column; gap: 5px;">
+        <span style="font-size: 13px; font-weight: 600;">Want to look around first?</span>
+        <span style="font-size: 13px; line-height: 1.55; color: #56606D;">
+          <a href="#" style="font-weight: 600;">Load ten sample people</a> — nothing is saved until you replace them with your own.
+        </span>
+      </div>
+    </div>
+
+    <!-- What the spreadsheet has to look like: shown, not described -->
+    <div style="width: 480px; flex-shrink: 0; display: flex; flex-direction: column; gap: 10px;">
+      <span style="font-size: 10.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #7A8593;">Your spreadsheet needs these columns</span>
+      <div style="border: 1px solid #DDE2E8;">
+        <div style="display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr 1fr; background: #F2F4F7; border-bottom: 1px solid #DDE2E8;">
+          <span style="font-size: 11px; font-weight: 700; color: #46505C; padding: 9px 10px; border-right: 1px solid #DDE2E8;">Name</span>
+          <span style="font-size: 11px; font-weight: 700; color: #46505C; padding: 9px 10px; border-right: 1px solid #DDE2E8;">Performance</span>
+          <span style="font-size: 11px; font-weight: 700; color: #46505C; padding: 9px 10px; border-right: 1px solid #DDE2E8;">Potential</span>
+          <span style="font-size: 11px; font-weight: 700; color: #46505C; padding: 9px 10px; border-right: 1px solid #DDE2E8;">Risk of Loss</span>
+          <span style="font-size: 11px; font-weight: 700; color: #46505C; padding: 9px 10px;">Impact of Loss</span>
+        </div>
+        <div style="display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr 1fr; border-bottom: 1px solid #E7EBF0;">
+          <span style="font-size: 12.5px; padding: 9px 10px; border-right: 1px solid #E7EBF0;">Alex Morgan</span>
+          <span style="font-size: 12.5px; padding: 9px 10px; border-right: 1px solid #E7EBF0; font-variant-numeric: tabular-nums;">3</span>
+          <span style="font-size: 12.5px; padding: 9px 10px; border-right: 1px solid #E7EBF0; font-variant-numeric: tabular-nums;">3</span>
+          <span style="font-size: 12.5px; padding: 9px 10px; border-right: 1px solid #E7EBF0; font-variant-numeric: tabular-nums;">2</span>
+          <span style="font-size: 12.5px; padding: 9px 10px; font-variant-numeric: tabular-nums;">3</span>
+        </div>
+        <div style="display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr 1fr;">
+          <span style="font-size: 12.5px; padding: 9px 10px; border-right: 1px solid #E7EBF0;">Jordan Lee</span>
+          <span style="font-size: 12.5px; padding: 9px 10px; border-right: 1px solid #E7EBF0; font-variant-numeric: tabular-nums;">1</span>
+          <span style="font-size: 12.5px; padding: 9px 10px; border-right: 1px solid #E7EBF0; font-variant-numeric: tabular-nums;">1</span>
+          <span style="font-size: 12.5px; padding: 9px 10px; border-right: 1px solid #E7EBF0; font-variant-numeric: tabular-nums;">1</span>
+          <span style="font-size: 12.5px; padding: 9px 10px; font-variant-numeric: tabular-nums;">2</span>
+        </div>
+      </div>
+      <span style="font-size: 12.5px; line-height: 1.55; color: #7A8593; text-wrap: pretty;">Only <strong style="color: #46505C;">Name</strong> is required. A missing rating is treated as a 2; anything other than 1, 2 or 3 is rejected with the row number.</span>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

@@ -4,91 +4,96 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TeamBeacon — Workforce 9-Box</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      fontFamily: { sans: ['"Public Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
+      colors: {
+        ink: '#14181D', muted: '#56606D', faint: '#7A8593', hairline: '#E7EBF0',
+        rule: '#DDE2E8', navy: '#1F4E79', 'navy-dark': '#14324D',
+        good: '#2E7D4F', 'good-bg': '#DFF0E2', 'good-ink': '#1D5735',
+        warn: '#B5842B', 'warn-bg': '#FBF0D9', 'warn-ink': '#6B4E12',
+        bad:  '#B23B32', 'bad-bg':  '#FBE3E1', 'bad-ink':  '#7E2A23',
+      },
+    } } };
+  </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <script src="../lib.js"></script>
   <style>
-    .box-green  { background-color: #bbf7d0; border-color: #16a34a; }
-    .box-yellow { background-color: #fef9c3; border-color: #ca8a04; }
-    .box-red    { background-color: #fee2e2; border-color: #dc2626; }
-    .box-neutral{ background-color: #f9fafb; border-color: #d1d5db; }
+    /* Cell colours. Meanings come from lib.js and never change; only the hues
+       are Direction B's. The ring replaces a border so cells stay square and
+       the box model is untouched. */
+    .box-green  { background-color: #DFF0E2; box-shadow: inset 0 0 0 2px #2E7D4F; }
+    .box-yellow { background-color: #FBF0D9; box-shadow: inset 0 0 0 2px #B5842B; }
+    .box-red    { background-color: #FBE3E1; box-shadow: inset 0 0 0 2px #B23B32; }
+    .box-neutral{ background-color: #FFFFFF; box-shadow: inset 0 0 0 1px #DDE2E8; }
+    .box-green  .employee-chip { color: #1D5735; }
+    .box-yellow .employee-chip { color: #6B4E12; }
+    .box-red    .employee-chip { color: #7E2A23; }
+    .box-neutral .employee-chip { color: #56606D; }
     .employee-chip {
-      display: inline-block;
-      font-size: 0.7rem;
-      padding: 1px 6px;
-      border-radius: 9999px;
-      background: rgba(0,0,0,0.08);
-      margin: 2px 1px;
+      display: block;
+      font-size: 12px;
+      line-height: 1.45;
+      padding: 0;
+      background: transparent;
+      margin: 0;
       white-space: nowrap;
       cursor: grab;
       user-select: none;
     }
     .employee-chip:active { cursor: grabbing; }
-    .grid-cell { transition: box-shadow 0.15s; }
-    .cell-highlight { box-shadow: 0 0 0 3px #818cf8; }
-    .cell-drag-over { box-shadow: 0 0 0 3px #6366f1; opacity: 0.8; }
+    .grid-cell { transition: outline-color 0.15s; outline: 2px solid transparent; outline-offset: 1px; }
+    .cell-highlight { outline-color: #1F4E79; }
+    .cell-drag-over { outline-color: #1F4E79; opacity: 0.85; }
 
     @media print {
-      /* Force background colors to print (grid cell colors) */
+      /* Force background colours to print (grid cell fills) */
       * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 
-      /* Hide everything interactive */
-      #loading-gate, #purchase-gate,
-      #header-actions,
-      .bg-indigo-50,        /* CTA banner */
-      section:has(#panel-csv), /* entire input section */
-      #error-msg,
+      /* Anything marked as screen-only chrome drops out of the printed sheet.
+         Keyed on data-print rather than on styling classes, so a repaint can
+         never silently reintroduce the CTA banner or the loader into a PDF. */
+      [data-print="hide"] { display: none !important; }
+
+      #loading-gate, #purchase-gate, #header-actions, #error-msg { display: none !important; }
       .employee-chip { cursor: default; }
 
-      /* Hide the input section and CTA banner outright */
-      body > div#app-content > main > div.bg-indigo-50,
-      body > div#app-content > main > section:first-of-type { display: none !important; }
-
-      /* Hide header buttons */
-      #header-actions { display: none !important; }
-
-      /* Clean up page chrome */
       body { background: white; }
-      header { border-bottom: 1px solid #e5e7eb; box-shadow: none; }
+      header { border-bottom: 1px solid #14181D; box-shadow: none; }
 
-      /* Let grids sit side by side on a wide page */
-      .flex-col { flex-direction: row !important; }
-      .lg\\:pr-4 { padding-right: 1rem; }
-      .lg\\:pl-4 { padding-left: 1rem; }
-      .hidden.lg\\:block { display: block !important; } /* divider line */
+      /* Grids sit side by side on a wide page */
+      #grids-row { flex-direction: row !important; }
+      #grids-row > div { margin-top: 0 !important; }
 
-      /* Remove card shadow */
-      .shadow-sm { box-shadow: none; }
-
-      /* Avoid breaking a grid or report card across pages */
+      /* Never split a grid or a report finding across pages */
       #grid-perf-pot, #grid-risk-impact,
-      #report-content > div { page-break-inside: avoid; break-inside: avoid; }
-
-      /* Keep the report section together as much as possible */
-      #report-content .rounded-lg { page-break-inside: avoid; break-inside: avoid; }
+      #report-content > div,
+      #report-content [data-coord] { page-break-inside: avoid; break-inside: avoid; }
     }
   </style>
 </head>
-<body class="bg-gray-50 min-h-screen font-sans text-gray-800">
+<body class="bg-white min-h-screen font-sans text-ink antialiased">
 
   <!-- Loading gate (shown while checking access) -->
   <div id="loading-gate" class="min-h-screen flex items-center justify-center">
-    <p class="text-gray-400 text-sm">Verifying access…</p>
+    <p class="text-faint text-[13.5px]">Verifying access…</p>
   </div>
 
   <!-- Purchase gate (shown if no valid token) -->
   <div id="purchase-gate" class="hidden min-h-screen flex items-center justify-center">
     <div class="text-center space-y-4 max-w-sm px-6">
-      <div class="w-10 h-10 rounded bg-indigo-600 flex items-center justify-center mx-auto">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-        </svg>
-      </div>
-      <h1 class="text-2xl font-semibold text-gray-800">Access Required</h1>
-      <p class="text-gray-500 text-sm">Purchase TeamBeacon to access the workforce analysis tool.</p>
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-navy mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M4 20V10" /><path d="M10 20V4" /><path d="M16 20v-7" /><path d="M22 20H2" />
+      </svg>
+      <h1 class="text-[26px] font-bold tracking-[-0.025em]">Access required</h1>
+      <p class="text-muted text-[14px]">Purchase TeamBeacon to open the workforce analysis tool.</p>
       <a href="/"
-        class="inline-block bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition">
-        Purchase Access →
+        class="inline-flex items-center h-[52px] bg-navy text-white px-6 text-[15.5px] font-semibold no-underline hover:bg-navy-dark transition-colors">
+        Purchase access
       </a>
     </div>
   </div>
@@ -97,158 +102,171 @@
   <div id="app-content" class="hidden">
 
     <!-- Header -->
-    <header class="bg-white border-b border-gray-200 px-6 py-4 flex items-center gap-3">
-      <a href="/app/" class="flex items-center gap-3 no-underline text-gray-800">
-        <div class="w-7 h-7 rounded bg-indigo-600 flex items-center justify-center">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-          </svg>
-        </div>
-        <h1 class="text-xl font-semibold tracking-tight">TeamBeacon</h1>
+    <header class="border-b-2 border-ink px-6 md:px-12 py-4 flex items-center gap-3">
+      <a href="/app/" class="flex items-center gap-3 no-underline text-ink">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-[22px] h-[22px] text-navy" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 20V10" /><path d="M10 20V4" /><path d="M16 20v-7" /><path d="M22 20H2" />
+        </svg>
+        <h1 class="text-[19px] font-bold tracking-[-0.02em]">TeamBeacon</h1>
       </a>
-      <div id="header-actions" class="hidden ml-auto flex items-center gap-2">
+      <div id="header-actions" class="hidden ml-auto flex items-center gap-2.5">
         <button onclick="exportCSV()"
-          class="text-sm font-medium px-3 py-1.5 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 transition">
+          class="h-11 px-4 text-[13.5px] font-medium border border-[#C6CDD6] text-ink hover:bg-[#F5F8FB] transition-colors">
           Export CSV
         </button>
         <button onclick="resetSession()"
-          class="text-sm font-medium px-3 py-1.5 rounded-lg border border-red-200 text-red-600 hover:bg-red-50 transition">
+          class="h-11 px-4 text-[13.5px] font-medium border border-rule text-muted hover:bg-[#F5F8FB] transition-colors">
           Reset
         </button>
       </div>
     </header>
 
-    <main class="max-w-6xl mx-auto px-6 py-10 space-y-10">
+    <main class="max-w-[1280px] mx-auto px-6 md:px-12 py-9 flex flex-col gap-9">
 
-      <!-- CTA Banner (hidden when real data is loaded) -->
-      <div id="cta-banner" class="bg-indigo-50 border border-indigo-200 rounded-xl px-6 py-5 text-center space-y-1">
-        <p class="text-indigo-900 font-semibold text-base">Ready to evaluate your team?</p>
-        <p class="text-indigo-700 text-sm">
-          <button onclick="switchTab('csv')" class="underline font-medium hover:text-indigo-900">Upload a CSV</button>
-          &nbsp;or&nbsp;
-          <button onclick="switchTab('manual'); document.getElementById('panel-sheets').closest('section').scrollIntoView({behavior:'smooth'})" class="underline font-medium hover:text-indigo-900">Manually edit this sample data</button>
-          &nbsp;to get started with your own team.
-        </p>
-      </div>
+      <!-- Results lead: the grids are what a manager opened this to read. -->
+      <section id="results" class="hidden flex flex-col gap-7">
 
-      <!-- Input Section -->
-      <section class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-5">
-        <h2 class="text-lg font-semibold">Load Employee Data</h2>
-        <p class="text-sm text-gray-500">
-          Provide a spreadsheet with columns: <code class="bg-gray-100 px-1 rounded">Name</code>,
-          <code class="bg-gray-100 px-1 rounded">Performance</code>,
-          <code class="bg-gray-100 px-1 rounded">Potential</code>,
-          <code class="bg-gray-100 px-1 rounded">Risk of Loss</code>,
-          <code class="bg-gray-100 px-1 rounded">Impact of Loss</code>.
-          Values must be 1, 2, or 3.
-        </p>
+        <div class="flex flex-wrap items-end justify-between gap-6">
+          <div class="flex flex-col gap-1.5">
+            <div class="text-[10.5px] font-bold uppercase tracking-[0.14em] text-faint">Talent review</div>
+            <div id="employee-summary" class="text-[30px] font-bold leading-tight tracking-[-0.025em]"></div>
+          </div>
+          <div id="seed-actions" class="hidden flex items-center gap-3">
+            <button onclick="switchTab('csv'); document.getElementById('input-section').scrollIntoView({behavior:'smooth'})"
+              class="h-11 px-5 bg-navy text-white text-[13.5px] font-semibold hover:bg-navy-dark transition-colors">
+              Load your team
+            </button>
+          </div>
+        </div>
+
+        <!-- CTA banner (hidden when real data is loaded) -->
+        <div id="cta-banner" data-print="hide" class="border border-[#E3C77E] bg-[#FDF7E8] px-5 py-4 flex flex-wrap items-center gap-x-2 gap-y-1">
+          <span class="text-[13.5px] font-semibold text-warn-ink">You are looking at sample data.</span>
+          <span class="text-[13.5px] text-warn-ink">
+            <button onclick="switchTab('csv'); document.getElementById('input-section').scrollIntoView({behavior:'smooth'})" class="underline font-semibold hover:text-ink">Upload a CSV</button>
+            or
+            <button onclick="switchTab('manual'); document.getElementById('input-section').scrollIntoView({behavior:'smooth'})" class="underline font-semibold hover:text-ink">type your own team in</button>
+            to replace it.
+          </span>
+        </div>
+
+        <!-- Two 9-box grids -->
+        <div id="grids-row" class="flex flex-col lg:flex-row gap-10 lg:gap-11">
+          <div class="flex-1 flex flex-col gap-3.5">
+            <div class="flex flex-col gap-0.5">
+              <div class="text-[10.5px] font-bold uppercase tracking-[0.14em] text-faint">Chart 01</div>
+              <h2 class="text-[20px] font-bold tracking-[-0.02em]">Performance vs. Potential</h2>
+            </div>
+            <div id="grid-perf-pot"></div>
+          </div>
+          <div class="flex-1 flex flex-col gap-3.5">
+            <div class="flex flex-col gap-0.5">
+              <div class="text-[10.5px] font-bold uppercase tracking-[0.14em] text-faint">Chart 02</div>
+              <h2 class="text-[20px] font-bold tracking-[-0.02em]">Risk of Loss vs. Impact of Loss</h2>
+            </div>
+            <div id="grid-risk-impact"></div>
+          </div>
+        </div>
+
+        <!-- Legend, stated once for both charts -->
+        <div class="border-t border-hairline pt-3.5 flex flex-wrap items-center gap-x-7 gap-y-2">
+          <span class="text-[10.5px] font-bold uppercase tracking-[0.12em] text-[#9AA3AF]">Reading the colour</span>
+          <span class="inline-flex items-center gap-2"><span class="w-3.5 h-3.5 bg-good-bg shadow-[inset_0_0_0_2px_#2E7D4F]"></span><span class="text-[12.5px] text-muted">Strength — act to keep or promote</span></span>
+          <span class="inline-flex items-center gap-2"><span class="w-3.5 h-3.5 bg-warn-bg shadow-[inset_0_0_0_2px_#B5842B]"></span><span class="text-[12.5px] text-muted">Watch</span></span>
+          <span class="inline-flex items-center gap-2"><span class="w-3.5 h-3.5 bg-bad-bg shadow-[inset_0_0_0_2px_#B23B32]"></span><span class="text-[12.5px] text-muted">Needs a decision</span></span>
+        </div>
+
+        <!-- Report -->
+        <div class="flex flex-col gap-4 pt-2">
+          <div class="flex flex-col gap-1">
+            <div class="text-[10.5px] font-bold uppercase tracking-[0.14em] text-faint">Section 02</div>
+            <h2 class="text-[26px] font-bold tracking-[-0.025em]">What to do about it</h2>
+            <p class="text-[14px] leading-relaxed text-muted max-w-[62ch] text-pretty">Only the cells that need a decision. Everyone sitting in the middle is working as expected and is left out on purpose.</p>
+          </div>
+          <div id="report-content" class="flex flex-col gap-7"></div>
+        </div>
+
+      </section>
+
+      <!-- Input section: secondary, below the answer. -->
+      <section id="input-section" data-print="hide" class="flex flex-col gap-5 border-t-2 border-ink pt-7">
+        <div class="flex flex-col gap-1">
+          <div class="text-[10.5px] font-bold uppercase tracking-[0.14em] text-faint">Section 01</div>
+          <h2 class="text-[22px] font-bold tracking-[-0.02em]">Your team</h2>
+          <p class="text-[14px] leading-relaxed text-muted max-w-[70ch] text-pretty">
+            Rate each person 1 to 3 on performance, potential, risk of loss and impact of loss.
+            Only <code class="bg-[#F2F4F7] px-1 text-[13px]">Name</code> is required — a missing rating is treated as a 2.
+          </p>
+        </div>
 
         <!-- Tabs -->
-        <div class="flex gap-2 border-b border-gray-200">
+        <div class="flex gap-7 border-b border-rule">
           <button id="tab-csv" onclick="switchTab('csv')"
-            class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-indigo-600 text-indigo-600">
+            class="tab-btn pb-2.5 text-[14px] font-semibold border-b-2 border-navy text-ink">
             Upload CSV
           </button>
           <button id="tab-sheets" onclick="switchTab('sheets')"
-            class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700">
+            class="tab-btn pb-2.5 text-[14px] font-medium border-b-2 border-transparent text-faint hover:text-ink">
             Google Sheets
           </button>
           <button id="tab-manual" onclick="switchTab('manual')"
-            class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700">
+            class="tab-btn pb-2.5 text-[14px] font-medium border-b-2 border-transparent text-faint hover:text-ink">
             Manually Edit
           </button>
         </div>
 
         <!-- Google Sheets Panel -->
-        <div id="panel-sheets" class="hidden space-y-3">
-          <p class="text-sm text-gray-500">
-            Start from a Google Sheet with your employee list. The only required column is
-            <code class="bg-gray-100 px-1 rounded">Name</code>; you can also include any or all of
-            <code class="bg-gray-100 px-1 rounded">Performance</code>,
-            <code class="bg-gray-100 px-1 rounded">Potential</code>,
-            <code class="bg-gray-100 px-1 rounded">Risk of Loss</code>, and
-            <code class="bg-gray-100 px-1 rounded">Impact of Loss</code> (values 1–3).
-            Missing ratings default to 2.
+        <div id="panel-sheets" class="hidden flex flex-col gap-3">
+          <p class="text-[13.5px] leading-relaxed text-muted max-w-[76ch] text-pretty">
+            <strong class="text-ink">File → Share → Publish to web</strong> → choose the sheet tab →
+            select <strong class="text-ink">Comma-separated values (.csv)</strong> → Publish. Paste the link below.
+            When you are done, <strong class="text-ink">Export CSV</strong> brings your work back out.
           </p>
-          <p class="text-sm text-gray-500">
-            To load your sheet: <strong>File → Share → Publish to web</strong> → choose the sheet tab →
-            select <strong>Comma-separated values (.csv)</strong> → click Publish. Paste the link below.
-          </p>
-          <p class="text-sm text-gray-500">
-            When you're done, use <strong>Export CSV</strong> to save your work and bring it back into Google Sheets.
-          </p>
-          <div class="flex gap-3">
+          <div class="flex flex-wrap gap-3">
             <input id="sheets-url" type="text" placeholder="https://docs.google.com/spreadsheets/d/e/.../pub?output=csv"
-              class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+              class="flex-1 min-w-[280px] h-11 border border-[#C6CDD6] px-3 text-[14px] focus:outline-none focus:border-navy focus:ring-1 focus:ring-navy" />
             <button onclick="loadFromSheets()"
-              class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition">
+              class="h-11 px-5 bg-navy text-white text-[13.5px] font-semibold hover:bg-navy-dark transition-colors">
               Load
             </button>
           </div>
         </div>
 
         <!-- CSV Upload Panel -->
-        <div id="panel-csv" class="space-y-3">
+        <div id="panel-csv" class="flex flex-wrap items-center gap-3">
           <input id="csv-file" type="file" accept=".csv"
-            class="text-sm text-gray-600 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" />
+            class="text-[13.5px] text-muted file:mr-3 file:h-11 file:px-4 file:border file:border-[#C6CDD6] file:bg-white file:text-[13.5px] file:font-medium file:text-ink hover:file:bg-[#F5F8FB]" />
           <button onclick="loadFromFile()"
-            class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition">
+            class="h-11 px-5 bg-navy text-white text-[13.5px] font-semibold hover:bg-navy-dark transition-colors">
             Load
           </button>
         </div>
 
         <!-- Edit Data / Enter Manually Panel (shared) -->
-        <div id="panel-edit" class="hidden space-y-3">
+        <div id="panel-edit" class="hidden flex flex-col gap-3">
           <div class="overflow-x-auto">
-            <table class="w-full text-sm">
+            <table class="w-full text-[14px]">
               <thead>
-                <tr class="text-left text-xs text-gray-500 border-b border-gray-200">
-                  <th class="px-3 py-2 font-medium">Name</th>
-                  <th class="px-3 py-2 font-medium text-center">Performance</th>
-                  <th class="px-3 py-2 font-medium text-center">Potential</th>
-                  <th class="px-3 py-2 font-medium text-center">Risk of Loss</th>
-                  <th class="px-3 py-2 font-medium text-center">Impact of Loss</th>
-                  <th class="px-3 py-2"></th>
+                <tr class="text-left border-b-2 border-ink">
+                  <th class="px-3 pb-2.5 text-[10.5px] font-bold uppercase tracking-[0.12em] text-faint">Name</th>
+                  <th class="px-3 pb-2.5 text-[10.5px] font-bold uppercase tracking-[0.12em] text-faint text-center">Performance</th>
+                  <th class="px-3 pb-2.5 text-[10.5px] font-bold uppercase tracking-[0.12em] text-faint text-center">Potential</th>
+                  <th class="px-3 pb-2.5 text-[10.5px] font-bold uppercase tracking-[0.12em] text-faint text-center">Risk of Loss</th>
+                  <th class="px-3 pb-2.5 text-[10.5px] font-bold uppercase tracking-[0.12em] text-faint text-center">Impact of Loss</th>
+                  <th class="px-3 pb-2.5"></th>
                 </tr>
               </thead>
               <tbody id="edit-rows"></tbody>
             </table>
           </div>
           <button id="add-employee-btn" onclick="addEditRow()" onkeydown="handleAddBtnKey(event)"
-            class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">
+            class="self-start h-11 px-4 border border-navy text-navy text-[13.5px] font-semibold hover:bg-[#F5F8FB] transition-colors">
             + Add employee
           </button>
         </div>
 
         <!-- Error -->
-        <div id="error-msg" class="hidden text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2"></div>
-      </section>
-
-      <!-- Results Section -->
-      <section id="results" class="hidden space-y-10">
-
-        <!-- Employee count -->
-        <div id="employee-summary" class="text-sm text-gray-500"></div>
-
-        <!-- Two 9-box grids -->
-        <div class="flex flex-col lg:flex-row">
-          <div class="flex-1 lg:pr-4">
-            <h2 class="text-base font-semibold mb-4 text-gray-700">Performance vs. Potential</h2>
-            <div id="grid-perf-pot"></div>
-          </div>
-          <div class="hidden lg:block w-px self-stretch bg-gray-200"></div>
-          <div class="flex-1 lg:pl-4 mt-8 lg:mt-0">
-            <h2 class="text-base font-semibold mb-4 text-gray-700">Risk of Loss vs. Impact of Loss</h2>
-            <div id="grid-risk-impact"></div>
-          </div>
-        </div>
-
-        <!-- Report -->
-        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-          <h2 class="text-lg font-semibold mb-4">Actionable Insights</h2>
-          <div id="report-content" class="space-y-4"></div>
-        </div>
-
+        <div id="error-msg" class="hidden text-[13.5px] text-bad-ink bg-bad-bg border border-[#E6C9C6] px-4 py-2.5"></div>
       </section>
 
     </main>
@@ -402,10 +420,12 @@
       ['sheets', 'csv', 'manual'].forEach(t => {
         const btn = document.getElementById('tab-' + t);
         if (!btn) return;
-        btn.classList.toggle('border-indigo-600', t === tab);
-        btn.classList.toggle('text-indigo-600', t === tab);
+        btn.classList.toggle('border-navy', t === tab);
+        btn.classList.toggle('text-ink', t === tab);
+        btn.classList.toggle('font-semibold', t === tab);
         btn.classList.toggle('border-transparent', t !== tab);
-        btn.classList.toggle('text-gray-500', t !== tab);
+        btn.classList.toggle('text-faint', t !== tab);
+        btn.classList.toggle('font-medium', t !== tab);
       });
     }
 
@@ -471,9 +491,11 @@
       document.getElementById('results').classList.remove('hidden');
       document.getElementById('header-actions').classList.toggle('hidden', employees.length === 0);
       document.getElementById('cta-banner').classList.toggle('hidden', !isSeedData);
-      document.getElementById('employee-summary').innerHTML = isSeedData
-        ? `<span class="inline-flex items-center gap-1.5 bg-amber-50 border border-amber-200 text-amber-800 text-xs font-medium px-2.5 py-1 rounded-full">Sample data — upload a CSV or manually edit to use your own team</span>`
-        : `Showing results for ${employees.length} employee${employees.length !== 1 ? 's' : ''}.`;
+      // The count is the heading now; "this is sample data" is carried by
+      // #cta-banner and #seed-actions instead of being folded in here.
+      document.getElementById('employee-summary').textContent =
+        `${employees.length} employee${employees.length !== 1 ? 's' : ''}`;
+      document.getElementById('seed-actions').classList.toggle('hidden', !isSeedData);
       renderEditPanel();
 
       renderGrid(
@@ -513,25 +535,25 @@
       // Grid: Y goes top (3) to bottom (1), X goes left (1) to right (3)
       // Y-tick labels occupy the first column; cells occupy the next 3.
       let html = `
-        <div class="flex items-stretch gap-2">
+        <div class="flex items-stretch gap-2.5">
           <!-- Y-axis label -->
           <div class="flex items-center justify-center" style="writing-mode:vertical-rl;transform:rotate(180deg)">
-            <span class="text-xs text-gray-400 font-medium whitespace-nowrap">${yLabel} →</span>
+            <span class="text-[11px] text-[#9AA3AF] whitespace-nowrap">${yLabel} →</span>
           </div>
           <!-- Grid area (Y-ticks + cells) + X-axis ticks + X-axis label -->
           <div class="flex-1">
-            <div class="grid gap-1" style="grid-template-columns: 1.25rem 1fr 1fr 1fr">
+            <div class="grid gap-0.5" style="grid-template-columns: 1.25rem 1fr 1fr 1fr">
       `;
 
       for (let y = 3; y >= 1; y--) {
-        html += `<div class="flex items-center justify-end pr-1 text-xs text-gray-400 font-mono">${y}</div>`;
+        html += `<div class="flex items-center justify-end pr-1.5 text-[11px] text-[#9AA3AF] tabular-nums">${y}</div>`;
         for (let x = 1; x <= 3; x++) {
           const key = `${x},${y}`;
           const color = colorSpec[key] || 'neutral';
           const names = cells[key];
           const cellClass = `box-${color}`;
           html += `
-            <div class="rounded-lg border-2 ${cellClass} p-2 min-h-[90px] flex flex-wrap content-start grid-cell" data-coord="${key}">
+            <div class="${cellClass} p-2 min-h-[96px] flex flex-col gap-0.5 content-start grid-cell" data-coord="${key}">
               ${names.map(n => `<span class="employee-chip" draggable="true" data-emp-name="${n.replace(/"/g, '&quot;')}">${n}</span>`).join('')}
             </div>
           `;
@@ -541,21 +563,20 @@
       html += `
             </div>
             <!-- X-axis ticks (aligned with grid columns) -->
-            <div class="grid gap-1 mt-1" style="grid-template-columns: 1.25rem 1fr 1fr 1fr">
+            <div class="grid gap-0.5 mt-1.5" style="grid-template-columns: 1.25rem 1fr 1fr 1fr">
               <div></div>
-              <div class="text-xs text-gray-400 font-mono text-center">1</div>
-              <div class="text-xs text-gray-400 font-mono text-center">2</div>
-              <div class="text-xs text-gray-400 font-mono text-center">3</div>
+              <div class="text-[11px] text-[#9AA3AF] tabular-nums text-center">1</div>
+              <div class="text-[11px] text-[#9AA3AF] tabular-nums text-center">2</div>
+              <div class="text-[11px] text-[#9AA3AF] tabular-nums text-center">3</div>
             </div>
             <!-- X-axis label -->
-            <div class="mt-1 text-center text-xs text-gray-400 font-medium">${xLabel} →</div>
+            <div class="mt-1 text-center text-[11px] text-[#9AA3AF]">${xLabel} →</div>
           </div><!-- end flex-1 -->
         </div><!-- end flex wrapper -->
       `;
 
       container.innerHTML = html;
     }
-
     function renderReport() {
       const report = document.getElementById('report-content');
       const sections = [];
@@ -588,24 +609,39 @@
       const riGreen = riOutliers.filter(s => s.color === 'green');
 
       if (ppRed.length + ppGreen.length + riRed.length + riGreen.length === 0) {
-        report.innerHTML = `<p class="text-gray-500 text-sm">No outliers detected — most employees are clustered in the middle.</p>`;
+        report.innerHTML = `<p class="text-[14px] text-muted">Nobody falls in a flagged cell — everyone is clustered in the middle.</p>`;
         return;
       }
 
-      function renderGroup(title, desc, items, cardClasses) {
+      // One row per finding. groupOutliers already returns a cell's people
+      // together, so the names become chips on one row rather than each person
+      // getting a full-width card of their own.
+      const TONE = {
+        red:   { chip: 'bg-[#FDF4F3] border-[#E6C9C6]', tag: 'bg-bad-bg text-bad-ink' },
+        green: { chip: 'bg-[#F4FAF5] border-[#C4DECB]', tag: 'bg-good-bg text-good-ink' },
+      };
+
+      function renderGroup(title, desc, items, tone) {
         if (items.length === 0) return '';
+        const t = TONE[tone];
+        const people = items.reduce((n, g) => n + g.names.length, 0);
         return `
-          <div class="space-y-2">
-            <h3 class="text-sm font-semibold text-gray-700">${title}</h3>
-            ${desc ? `<p class="text-xs text-gray-500 mt-1 mb-2">${desc}</p>` : ''}
-            ${items.map(s => `
-              <div class="border rounded-lg p-4 ${cardClasses}" style="cursor:pointer"
-                   data-grid-id="${s.gridId}" data-coord="${s.coord}">
-                <div class="flex items-center gap-2 mb-1 pointer-events-none">
-                  <span class="font-semibold text-sm">${s.label}</span>
-                  <span class="text-xs opacity-70">(${s.coord})</span>
+          <div class="flex flex-col">
+            <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 border-b-2 border-ink pb-2.5">
+              <span class="text-[12.5px] font-bold uppercase tracking-[0.13em]">${title}</span>
+              <span class="text-[12.5px] text-faint tabular-nums">${people} ${people === 1 ? 'person' : 'people'} across ${items.length} ${items.length === 1 ? 'finding' : 'findings'}</span>
+            </div>
+            ${desc ? `<p class="text-[13px] leading-relaxed text-muted max-w-[88ch] text-pretty pt-3">${desc}</p>` : ''}
+            ${items.map(g => `
+              <div class="grid gap-x-6 gap-y-3 py-5 border-b border-hairline items-start" style="grid-template-columns: minmax(150px, 190px) 1fr; cursor:pointer"
+                   data-grid-id="${g.gridId}" data-coord="${g.coord}">
+                <div class="flex flex-col gap-1.5 pointer-events-none">
+                  <span class="self-start ${t.tag} text-[11px] font-bold uppercase tracking-[0.1em] px-2.5 py-1.5">${g.label}</span>
+                  <span class="text-[11.5px] text-[#9AA3AF] tabular-nums">(${g.coord})</span>
                 </div>
-                <p class="text-sm pointer-events-none">${s.names.join(', ')}</p>
+                <div class="flex flex-wrap gap-2 pointer-events-none">
+                  ${g.names.map(n => `<span class="border ${t.chip} text-[13.5px] font-medium px-3 py-1.5">${n}</span>`).join('')}
+                </div>
               </div>
             `).join('')}
           </div>
@@ -614,24 +650,24 @@
 
       report.innerHTML = [
         renderGroup(
-          '🚨 Needs attention — Performance vs. Potential',
-          'Possible misalignment: These individuals are not performing well and are at or near their ceiling. Consider whether they are a good fit for this organization or team.',
-          ppRed, 'bg-red-50 text-red-800 border-red-200'
+          'Act now — Performance vs. Potential',
+          'Possible misalignment: these individuals are not performing well and are at or near their ceiling. Consider whether they are a good fit for this organization or team.',
+          ppRed, 'red'
         ),
         renderGroup(
-          '🚨 Needs attention — Risk of Loss vs. Impact of Loss',
-          'Possible operational risk: These individuals may be at risk of leaving the organization and would have an outsized impact if they did so. Consider succession planning or adding operational redundancy to mitigate this risk.',
-          riRed, 'bg-red-50 text-red-800 border-red-200'
+          'Act now — Risk of Loss vs. Impact of Loss',
+          'Possible operational risk: these individuals may be at risk of leaving and would have an outsized impact if they did. Consider succession planning or adding operational redundancy.',
+          riRed, 'red'
         ),
         renderGroup(
-          '🔑 Opportunities — Performance vs. Potential',
-          'Possible promotion or responsibility augmentation opportunity: These individuals are performing exceptionally and have a high ceiling. Consider looking for opportunities to promote them or expand their role.',
-          ppGreen, 'bg-green-50 text-green-800 border-green-200'
+          'Opportunities — Performance vs. Potential',
+          'Possible promotion or expanded responsibility: these individuals are performing exceptionally and have a high ceiling. Look for opportunities to promote them or widen their role.',
+          ppGreen, 'green'
         ),
         renderGroup(
-          '🔑 Opportunities — Risk of Loss vs. Impact of Loss',
+          'Opportunities — Risk of Loss vs. Impact of Loss',
           '',
-          riGreen, 'bg-green-50 text-green-800 border-green-200'
+          riGreen, 'green'
         ),
       ].filter(Boolean).join('');
     }
@@ -649,11 +685,11 @@
     function renderEditPanel() {
       const tbody = document.getElementById('edit-rows');
       tbody.innerHTML = employees.map((e, i) => `
-        <tr class="border-b border-gray-100 hover:bg-gray-50">
+        <tr class="border-b border-hairline hover:bg-[#F5F8FB]">
           <td class="px-3 py-1.5">
             <input type="text" value="${e.name.replace(/"/g, '&quot;')}"
               data-idx="${i}" data-field="name"
-              class="border border-gray-300 rounded px-2 py-1 text-sm w-full min-w-[8rem] focus:outline-none focus:ring-1 focus:ring-indigo-400"
+              class="h-11 border border-[#C6CDD6] px-3 text-[14px] w-full min-w-[8rem] focus:outline-none focus:border-navy focus:ring-1 focus:ring-navy"
               oninput="updateName(${i}, this.value)"
               onkeydown="handleNameKey(event, ${i})"
               onfocus="setTimeout(() => { if (this.value === 'New Employee') this.select(); else this.setSelectionRange(this.value.length, this.value.length); }, 0)" />
@@ -663,15 +699,15 @@
               <div class="flex items-center justify-center gap-1">
                 <button type="button" tabindex="-1"
                   onclick="adjustVal(${i}, '${field}', -1)"
-                  class="w-8 h-8 rounded border border-gray-200 text-gray-400 hover:bg-gray-100 hover:text-gray-700 flex items-center justify-center text-sm select-none">−</button>
+                  class="w-8 h-8 border border-gray-200 text-faint hover:bg-gray-100 hover:text-gray-700 flex items-center justify-center text-sm select-none">−</button>
                 <input type="text" inputmode="numeric" value="${e[field]}"
                   data-idx="${i}" data-field="${field}"
-                  class="w-8 text-center border border-gray-300 rounded px-1 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-400"
+                  class="w-8 text-center border border-[#C6CDD6] px-1 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-navy"
                   onfocus="this.select()"
                   onkeydown="handleDimKey(event, ${i}, '${field}')" />
                 <button type="button" tabindex="-1"
                   onclick="adjustVal(${i}, '${field}', 1)"
-                  class="w-8 h-8 rounded border border-gray-200 text-gray-400 hover:bg-gray-100 hover:text-gray-700 flex items-center justify-center text-sm select-none">+</button>
+                  class="w-8 h-8 border border-gray-200 text-faint hover:bg-gray-100 hover:text-gray-700 flex items-center justify-center text-sm select-none">+</button>
               </div>
             </td>
           `).join('')}
@@ -784,9 +820,11 @@
 
     function renderGridsAndReport() {
       document.getElementById('cta-banner').classList.toggle('hidden', !isSeedData);
-      document.getElementById('employee-summary').innerHTML = isSeedData
-        ? `<span class="inline-flex items-center gap-1.5 bg-amber-50 border border-amber-200 text-amber-800 text-xs font-medium px-2.5 py-1 rounded-full">Sample data — upload a CSV or manually edit to use your own team</span>`
-        : `Showing results for ${employees.length} employee${employees.length !== 1 ? 's' : ''}.`;
+      // The count is the heading now; "this is sample data" is carried by
+      // #cta-banner and #seed-actions instead of being folded in here.
+      document.getElementById('employee-summary').textContent =
+        `${employees.length} employee${employees.length !== 1 ? 's' : ''}`;
+      document.getElementById('seed-actions').classList.toggle('hidden', !isSeedData);
       renderGrid('grid-perf-pot', employees, e => e.perf, e => e.pot, PERF_POT_COLORS, 'Performance', 'Potential');
       renderGrid('grid-risk-impact', employees, e => e.risk, e => e.imp, RISK_IMPACT_COLORS, 'Risk of Loss', 'Impact of Loss');
       renderReport();
