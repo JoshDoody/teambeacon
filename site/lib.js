@@ -1,3 +1,23 @@
+// ─── Paywall ──────────────────────────────────────────────────────────────────
+// Single switch for the Stripe paywall, read by BOTH site/index.html (which CTA
+// to show) and site/app/index.html (whether to gate the app). It lives here so
+// the landing page and the app cannot drift into disagreeing about whether the
+// product costs money.
+//
+// false → the tool is free and open; the landing page advertises the future
+//         price and no checkout is reachable.
+// true  → restores the original behaviour: landing sells at PRICE_USD via
+//         Stripe Checkout, and the app requires a valid token.
+//
+// Nothing about the Stripe integration was removed to turn this off — the three
+// Netlify functions, the token validation and the purchase-gate markup are all
+// still in place. Flipping this back to true is the whole re-enable.
+const PAYWALL_ENABLED = false;
+
+// The price the product will cost when the paywall goes back on. Shown on the
+// landing page in both states, so the "free for now" message stays honest.
+const PRICE_USD = 49;
+
 // ─── Color specs ─────────────────────────────────────────────────────────────
 const PERF_POT_COLORS = {
   '3,3': 'green',
@@ -101,6 +121,8 @@ function groupOutliers(emps, xFn, yFn, colorSpec, labelMap, xDim, yDim) {
 // ─── Export (Node.js / tests) ─────────────────────────────────────────────────
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
+    PAYWALL_ENABLED,
+    PRICE_USD,
     PERF_POT_COLORS,
     RISK_IMPACT_COLORS,
     PERF_POT_LABELS,

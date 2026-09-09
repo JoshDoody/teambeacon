@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TeamBeacon — Workforce 9-Box Analysis</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="lib.js"></script>
 </head>
 <body class="bg-gray-50 min-h-screen font-sans text-gray-800">
 
@@ -49,9 +50,41 @@
       </div>
     </div>
 
-    <!-- CTA -->
-    <div class="bg-indigo-50 border border-indigo-200 rounded-2xl px-8 py-10 space-y-4">
-      <div class="text-3xl font-bold text-gray-900">$49</div>
+    <!-- CTA — free while the paywall is off (PAYWALL_ENABLED in lib.js).
+         Exactly one of #cta-free / #cta-paid is shown; the script below picks. -->
+    <div id="cta-free" class="hidden bg-emerald-50 border-2 border-emerald-300 rounded-2xl px-8 py-10 space-y-5">
+      <div class="inline-block bg-emerald-600 text-white text-sm font-bold px-4 py-1.5 rounded-full tracking-wide">
+        FREE RIGHT NOW
+      </div>
+
+      <div class="space-y-1">
+        <div class="text-5xl font-bold text-emerald-700">$0</div>
+        <div class="text-emerald-800 text-sm font-medium">while TeamBeacon is in development</div>
+      </div>
+
+      <p class="text-gray-700 text-base max-w-lg mx-auto leading-relaxed">
+        The full tool is <strong class="text-gray-900">free to use today</strong> — no account,
+        no credit card, nothing to cancel.
+      </p>
+
+      <div class="bg-white/70 border border-emerald-200 rounded-lg px-5 py-4 max-w-lg mx-auto">
+        <p class="text-gray-700 text-sm leading-relaxed">
+          <strong class="text-gray-900">This won't be free forever.</strong>
+          When TeamBeacon launches it will become a one-time
+          <strong class="text-gray-900">$<span class="future-price">49</span></strong> purchase.
+          Everything you see now is free until then.
+        </p>
+      </div>
+
+      <a href="app/" id="try-free-btn"
+        class="inline-block bg-emerald-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-emerald-700 transition">
+        Open TeamBeacon — free →
+      </a>
+    </div>
+
+    <!-- CTA — paid. Restored verbatim when PAYWALL_ENABLED flips back to true. -->
+    <div id="cta-paid" class="hidden bg-indigo-50 border border-indigo-200 rounded-2xl px-8 py-10 space-y-4">
+      <div class="text-3xl font-bold text-gray-900">$<span class="future-price">49</span></div>
       <div class="text-gray-500 text-sm">One-time purchase. No subscription. 72-hour access window.</div>
       <button id="buy-btn" onclick="startCheckout()"
         class="bg-indigo-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-indigo-700 transition">
@@ -64,13 +97,21 @@
   </main>
 
   <script>
-    // If user already has a valid token, logo goes to the app
+    // Show the CTA that matches the paywall state, and keep every price on the
+    // page in step with PRICE_USD so "it will cost $X later" can't go stale.
+    document.querySelectorAll('.future-price').forEach(el => el.textContent = PRICE_USD);
+    document.getElementById(PAYWALL_ENABLED ? 'cta-paid' : 'cta-free').classList.remove('hidden');
+
+    // Logo goes to the app when the reader can actually get in: always while the
+    // tool is free, and only with a live token once it is paid.
     try {
       const stored = JSON.parse(localStorage.getItem('teambeacon_token') || 'null');
-      if (stored && stored.expiresAt > Date.now()) {
+      if (!PAYWALL_ENABLED || (stored && stored.expiresAt > Date.now())) {
         document.getElementById('logo-link').href = '/app/';
       }
-    } catch (e) {}
+    } catch (e) {
+      if (!PAYWALL_ENABLED) document.getElementById('logo-link').href = '/app/';
+    }
 
     // Surface payment failure messages from Stripe redirect
     const params = new URLSearchParams(location.search);

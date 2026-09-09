@@ -2,6 +2,7 @@ const { test, expect } = require('@playwright/test');
 const path = require('path');
 
 const FILE_URL = 'file://' + path.resolve(__dirname, '..', 'site', 'app', 'index.html');
+const LANDING_URL = 'file://' + path.resolve(__dirname, '..', 'site', 'index.html');
 const SAMPLE_CSV = path.resolve(__dirname, '..', 'sample.csv');
 const SEED_COUNT = 10; // seed employees pre-loaded on every fresh page
 
@@ -554,5 +555,59 @@ test.describe('Reset & Start Fresh', () => {
     await page.waitForLoadState('networkidle');
     await expect(page.locator('#results')).toBeHidden();
     await expect(page.locator('#header-actions')).toBeHidden();
+  });
+});
+
+// ─── Paywall disabled ────────────────────────────────────────────────────────
+
+// PAYWALL_ENABLED is false in site/lib.js, so the tool is free and open. These
+// assert the *disabled* state directly rather than relying on the token that
+// every other test injects — without them the suite would still pass if the
+// gate quietly came back, because injectToken() would mask it.
+test.describe('Paywall disabled', () => {
+  test('app opens with no token at all — the gate never appears', async ({ browser }) => {
+    // A fresh context, deliberately WITHOUT injectToken().
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    await page.goto(FILE_URL);
+    await page.waitForLoadState('networkidle');
+
+    await expect(page.locator('#app-content')).toBeVisible();
+    await expect(page.locator('#purchase-gate')).toBeHidden();
+    await expect(page.locator('#loading-gate')).toBeHidden();
+    // The app really ran, not just un-hid: seed data is rendered.
+    await expect(page.locator('#results')).toBeVisible();
+
+    const token = await page.evaluate(() => localStorage.getItem('teambeacon_token'));
+    expect(token).toBeNull(); // access was granted without one existing
+
+    await context.close();
+  });
+
+  test('landing shows the free CTA and no way to pay', async ({ page }) => {
+    await page.goto(LANDING_URL);
+    await page.waitForLoadState('networkidle');
+
+    await expect(page.locator('#cta-free')).toBeVisible();
+    await expect(page.locator('#cta-paid')).toBeHidden();
+    await expect(page.locator('#buy-btn')).toBeHidden();
+  });
+
+  test('landing says it is free now AND priced later', async ({ page }) => {
+    await page.goto(LANDING_URL);
+    await page.waitForLoadState('networkidle');
+
+    const cta = page.locator('#cta-free');
+    await expect(cta).toContainText('FREE RIGHT NOW');
+    await expect(cta).toContainText('free to use today');
+    // The part that must not be missable: it is not free forever.
+    await expect(cta).toContainText("This won't be free forever");
+    await expect(cta).toContainText('$49');
+  });
+
+  test('free CTA leads into the app', async ({ page }) => {
+    await page.goto(LANDING_URL);
+    await page.waitForLoadState('networkidle');
+    await expect(page.locator('#try-free-btn')).toHaveAttribute('href', 'app/');
   });
 });

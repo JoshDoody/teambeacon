@@ -30,6 +30,23 @@ If you add a file the browser needs, it must go in `site/`.
 - **`__tests__/lib.test.js`** — Jest unit tests for all `lib.js` exports (39 tests).
 - **`tests/ui.spec.js`** — Playwright e2e tests against a `file://` URL (62 tests, Chromium only). They bypass the purchase gate by injecting a token; the functions are never exercised.
 
+## Paywall (currently OFF)
+
+`PAYWALL_ENABLED` in `site/lib.js` is the single switch, read by both
+`site/index.html` (which CTA to render) and `site/app/index.html` (whether to
+gate). It is `false`: the tool is free, `checkAccess()` short-circuits to
+`grantAccess()`, and the landing page shows `#cta-free` ("free right now, $49
+later") instead of `#cta-paid`.
+
+Nothing was deleted to disable it — the three Netlify functions, token
+validation, `#purchase-gate` and `#cta-paid` are all still present. Flipping the
+constant to `true` is the entire re-enable. `PRICE_USD` (49) keeps the "will
+cost $X later" copy in one place.
+
+When changing this, keep the "Paywall disabled" Playwright tests honest: they
+run in a context with **no** token deliberately, because the normal
+`injectToken()` beforeEach would hide a gate that came back.
+
 ## Key Concepts
 
 **Two 9-box grids** — each plots employees on a 3×3 grid (X=1–3, Y=1–3):

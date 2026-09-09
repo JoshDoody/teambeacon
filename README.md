@@ -68,7 +68,25 @@ The e2e suite points Playwright at a `file://` URL for `app/index.html`
 never exercise the functions — the purchase gate is bypassed by the tests
 rather than driven through Stripe.
 
-## How access works
+## The paywall is currently OFF
+
+`PAYWALL_ENABLED` in `site/lib.js` is `false`, so TeamBeacon is free and open:
+the app lets everyone in, and the landing page advertises the future price
+instead of selling. Both pages read that one constant, so they cannot disagree
+about whether the product costs money. `PRICE_USD` (49) is read by the landing
+page in both states.
+
+**Nothing about the Stripe integration was removed.** All three functions, the
+token minting and validation, the `#purchase-gate` markup and the `#cta-paid`
+block are intact and unused. Setting `PAYWALL_ENABLED = true` restores the
+paid flow described below — that flip is the whole re-enable. The env vars are
+still set in Netlify, and Stripe is still in test mode.
+
+Two Playwright tests assert the disabled state directly, in a context with no
+token, because every other test injects one and would mask the gate coming
+back.
+
+## How access works (when `PAYWALL_ENABLED` is true)
 
 1. Landing page POSTs to `create-checkout`, which creates a Stripe Checkout
    session and returns its URL.

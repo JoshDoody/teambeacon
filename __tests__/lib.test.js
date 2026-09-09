@@ -6,6 +6,8 @@ const {
   clampRating,
   processEmployees,
   groupOutliers,
+  PAYWALL_ENABLED,
+  PRICE_USD,
 } = require('../site/lib');
 
 // ─── clampRating ──────────────────────────────────────────────────────────────
@@ -231,5 +233,18 @@ describe('groupOutliers', () => {
     expect(result[0].color).toBe('red');
     expect(result[0].label).toBe('Retention Risk');
     expect(result[0].chart).toBe('Risk of Loss vs. Impact of Loss');
+  });
+});
+
+describe('paywall flag', () => {
+  // Locks the switch the landing page and the app both read. If this flips
+  // unintentionally, the product silently starts charging (or stops).
+  test('PAYWALL_ENABLED is exported and currently disabled', () => {
+    expect(typeof PAYWALL_ENABLED).toBe('boolean');
+    expect(PAYWALL_ENABLED).toBe(false);
+  });
+
+  test('PRICE_USD is exported so "free now, $X later" stays in one place', () => {
+    expect(PRICE_USD).toBe(49);
   });
 });

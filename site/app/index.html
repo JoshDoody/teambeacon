@@ -263,6 +263,14 @@
     const TOKEN_KEY = 'teambeacon_token';
 
     async function checkAccess() {
+      // Paywall off (PAYWALL_ENABLED in ../lib.js): the tool is free and open,
+      // so nothing below this point runs. Everything below is intact and is
+      // what comes back when the flag is flipped to true.
+      if (!PAYWALL_ENABLED) {
+        grantAccess();
+        return;
+      }
+
       // Check localStorage for a valid stored token
       try {
         const stored = JSON.parse(localStorage.getItem(TOKEN_KEY) || 'null');
