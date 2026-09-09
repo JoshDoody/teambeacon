@@ -4,3 +4,6 @@
 node_modules/
 test-results/
 .DS_Store
+
+# Netlify CLI edge-function artifact — regenerated, not ours
+deno.lock
