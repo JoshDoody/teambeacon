@@ -15,13 +15,20 @@ npx playwright test --grep "test name"  # run a single e2e test by name
 
 ## Architecture
 
-Single-page static app — no build step, deployable directly to GitHub Pages.
+Static app, no build step. A paid product: the landing page sells access and the
+app itself is gated behind a token minted after Stripe checkout.
 
-- **`index.html`** — entire UI, DOM logic, event handlers, and rendering. Loads Tailwind (Play CDN), PapaParse (CDN), and `lib.js`.
-- **`lib.js`** — pure business logic only (no DOM). UMD-lite pattern: works as browser globals and as Node.js `require()` for Jest. Exports: `PERF_POT_COLORS`, `RISK_IMPACT_COLORS`, `PERF_POT_LABELS`, `RISK_IMPACT_LABELS`, `clampRating`, `processEmployees`, `groupOutliers`.
-- **`sample.csv`** — 10-employee fixture used by Playwright tests.
-- **`__tests__/lib.test.js`** — Jest unit tests for all `lib.js` exports (~39 tests).
-- **`tests/ui.spec.js`** — Playwright e2e tests against `file://` URL (~45 tests, Chromium only).
+**`site/` is the entire web root and the only published directory.** Everything
+else in the repo is private by construction — see "What is public" in README.md.
+If you add a file the browser needs, it must go in `site/`.
+
+- **`site/index.html`** — landing / sales page. Starts Stripe checkout.
+- **`site/app/index.html`** — the app itself: all UI, DOM logic, event handlers, rendering. Loads Tailwind (Play CDN), PapaParse (CDN), and `../lib.js`.
+- **`site/lib.js`** — pure business logic only (no DOM). UMD-lite pattern: works as browser globals and as Node.js `require()` for Jest. Exports: `PERF_POT_COLORS`, `RISK_IMPACT_COLORS`, `PERF_POT_LABELS`, `RISK_IMPACT_LABELS`, `clampRating`, `processEmployees`, `groupOutliers`.
+- **`netlify/functions/`** — `create-checkout`, `complete-checkout`, `validate-token`. Anything touching a secret lives here, never in frontend JS.
+- **`sample.csv`** — 10-employee fixture for the e2e tests. Not served.
+- **`__tests__/lib.test.js`** — Jest unit tests for all `lib.js` exports (39 tests).
+- **`tests/ui.spec.js`** — Playwright e2e tests against a `file://` URL (62 tests, Chromium only). They bypass the purchase gate by injecting a token; the functions are never exercised.
 
 ## Key Concepts
 
@@ -44,18 +51,26 @@ Single-page static app — no build step, deployable directly to GitHub Pages.
 
 **`processEmployees(raw)`** — parses CSV rows. `Name` is required; rating columns (`Performance`, `Potential`, `Risk of Loss`, `Impact of Loss`) are optional and default to 2 if missing. Explicit out-of-range values (0, 4, non-numeric) are rejected with an error.
 
-**sessionStorage** — data persists across page reloads within a tab but is isolated per tab/window. Key: `teambeacon_employees`.
+**localStorage** — roster data survives closing the tab. Keys: `teambeacon_employees` (roster), `teambeacon_employees_seed` (is-seed-data flag), `teambeacon_reset` (explicit reset → blank slate on reload), `teambeacon_token` (access token + expiry). Note this is localStorage, not sessionStorage.
 
 **Outlier Report** — shows only red and green cells, split into four sections by chart and color: "🚨 Needs attention — Performance vs. Potential", "🚨 Needs attention — Risk of Loss vs. Impact of Loss", "🔑 Opportunities — Performance vs. Potential", "🔑 Opportunities — Risk of Loss vs. Impact of Loss".
 
 ## Input Tabs
 
-- **Google Sheets URL** — fetches published CSV; only works over HTTPS (GitHub Pages), not `file://`
+- **Google Sheets URL** — fetches published CSV; needs HTTPS (the deployed site), so it does not work from `file://`
 - **Upload CSV** — PapaParse file input
 - **Manually Edit** — live-editable table with +/− buttons; supports drag-and-drop of name chips between grid cells to update ratings
 
 ## Deployment
 
-Static site hosted on Netlify at **https://joshdoody-teambeacon.netlify.app**.
-Run `netlify deploy --dir=. --prod` to deploy. No build step.
-GitHub repo: https://github.com/JoshDoody/teambeacon (main branch).
+Static site on Netlify at **https://joshdoody-teambeacon.netlify.app**.
+GitHub repo: https://github.com/JoshDoody/teambeacon (`main`).
+
+Netlify is connected to the repo, so **pushing to `main` deploys automatically**
+— no build command, `publish = "site"`, functions bundled from
+`netlify/functions`. A push is a production deploy; there is no staging.
+
+Manual deploy, if ever needed: `netlify deploy --dir=site --prod`.
+
+Stripe is still in **test mode**. Going live means swapping four Netlify env
+vars: `STRIPE_SECRET_KEY`, `STRIPE_PRICE_ID`, `TOKEN_SIGNING_SECRET`, `SITE_URL`.

@@ -1,5 +1,8 @@
+# Publish only site/ — the web root is an allowlist by construction. Docs,
+# tests, scripts and package files live outside it and so cannot be served.
+# Functions are bundled from netlify/functions and are not part of the root.
 [build]
-  publish = "."
+  publish = "site"
 
 [functions]
   directory = "netlify/functions"

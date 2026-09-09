@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test');
 const path = require('path');
 
-const FILE_URL = 'file://' + path.resolve(__dirname, '..', 'app', 'index.html');
+const FILE_URL = 'file://' + path.resolve(__dirname, '..', 'site', 'app', 'index.html');
 const SAMPLE_CSV = path.resolve(__dirname, '..', 'sample.csv');
 const SEED_COUNT = 10; // seed employees pre-loaded on every fresh page
 

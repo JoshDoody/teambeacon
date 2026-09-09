@@ -6,7 +6,7 @@ const {
   clampRating,
   processEmployees,
   groupOutliers,
-} = require('../lib');
+} = require('../site/lib');
 
 // ─── clampRating ──────────────────────────────────────────────────────────────
 describe('clampRating', () => {

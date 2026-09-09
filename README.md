@@ -12,10 +12,12 @@ Live at https://joshdoody-teambeacon.netlify.app
 ## Layout
 
 ```
-index.html              Landing / sales page. Starts Stripe checkout.
-app/index.html          The actual app — entire UI, DOM logic, rendering (~1000 lines).
-lib.js                  Pure business logic, no DOM. Shared by the browser and Jest.
-sample.csv              10-employee fixture used by the e2e tests.
+site/                   The web root — and the ONLY thing published. See "What is public" below.
+  index.html            Landing / sales page. Starts Stripe checkout.
+  app/index.html        The actual app — entire UI, DOM logic, rendering (~1000 lines).
+  lib.js                Pure business logic, no DOM. Shared by the browser and Jest.
+
+sample.csv              10-employee fixture used by the e2e tests. Not served.
 
 netlify/functions/      Serverless functions. Anything touching a secret lives here.
   create-checkout.js      Creates a Stripe Checkout session.
@@ -96,15 +98,31 @@ in your shell for `netlify dev`. Never committed.
 
 ## Deploy
 
-No CI/CD and no build step — the repo root is served directly
-(`publish = "."` in `netlify.toml`).
+No build step. Netlify is connected to the GitHub repo, so **pushing to `main`
+deploys automatically** — there is no deploy command to run in the normal case.
+
+To deploy by hand anyway (e.g. to test something without committing):
 
 ```bash
-netlify deploy --dir=. --prod
+netlify deploy --dir=site --prod
 ```
 
 `netlify.toml` also redirects `/app` to `/app/` so the trailing-slash form
 serves `app/index.html`.
+
+## What is public
+
+`netlify.toml` sets `publish = "site"`, so the deployed web root contains only
+the three files under `site/`. Everything else in the repo — this README,
+`CLAUDE.md`, `MVP_FEASIBILITY.md`, `package.json`, `scripts/`, `tests/`,
+`__tests__/` — is outside the published directory and cannot be fetched.
+
+This is an allowlist by construction rather than a list of things to block: a
+new file is private unless it is deliberately placed in `site/`. The root used
+to be the web root (`publish = "."`), which quietly served every tracked file,
+including the feasibility doc, the test suite and the setup scripts.
+
+**If you add a file the browser needs, it has to go in `site/`.**
 
 ## Conventions
 
